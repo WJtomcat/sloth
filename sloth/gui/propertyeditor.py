@@ -1,12 +1,13 @@
 import time
 import logging
 from PyQt4.QtCore import pyqtSignal, QSize, Qt
-from PyQt4.QtGui import QWidget, QGroupBox, QVBoxLayout, QPushButton, QScrollArea, QLineEdit, QDoubleValidator, QIntValidator, QShortcut, QKeySequence
+from PyQt4.QtGui import QWidget, QGroupBox, QFormLayout, QVBoxLayout, QPushButton, QScrollArea, QLineEdit, QDoubleValidator, QIntValidator, QShortcut, QKeySequence
 from sloth.core.exceptions import ImproperlyConfigured
 from sloth.annotations.model import AnnotationModelItem
 from sloth.gui.floatinglayout import FloatingLayout
 from sloth.gui.utils import MyVBoxLayout
 from sloth.utils.bind import bind
+from sloth.gui.noteitem import NoteItem
 
 
 LOG = logging.getLogger(__name__)
@@ -310,10 +311,12 @@ class PropertyEditor(QWidget):
         self._attribute_handlers = {}
         self._handler_factory    = AttributeHandlerFactory()
 
+        self._noteitem = NoteItem()
+
         self._setupGUI()
 
         # Add label classes from config
-        for label in config:
+        for label in config.LABELS:
             self.addLabelClass(label)
 
     def onModelChanged(self, new_model):
@@ -366,6 +369,9 @@ class PropertyEditor(QWidget):
             hotkey = QShortcut(QKeySequence(label_config['hotkey']), self)
             hotkey.activated.connect(button.click)
             self._class_shortcuts[label_class] = hotkey
+
+    def onImageItemChanged(self, image_item):
+        self._noteitem.loadNote(image_item)
 
     def parseConfiguration(self, label_class, label_config):
         attrs = label_config['attributes']
@@ -464,3 +470,4 @@ class PropertyEditor(QWidget):
         self._layout.addWidget(self._classbox, 0)
         self._layout.addStretch(1)
 
+        self._layout.addWidget(self._noteitem, 1)
