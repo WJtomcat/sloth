@@ -8,6 +8,7 @@ from sloth.gui.floatinglayout import FloatingLayout
 from sloth.gui.utils import MyVBoxLayout
 from sloth.utils.bind import bind
 from sloth.gui.noteitem import NoteItem
+from sloth.gui.comboitem import ComboItem
 
 
 LOG = logging.getLogger(__name__)
@@ -312,12 +313,16 @@ class PropertyEditor(QWidget):
         self._handler_factory    = AttributeHandlerFactory()
 
         self._noteitem = NoteItem()
+        self._combo_items = []
 
         self._setupGUI()
 
         # Add label classes from config
         for label in config.LABELS:
             self.addLabelClass(label)
+
+        for label in config.COMBOCLASS:
+            self.addComboClass(label)
 
     def onModelChanged(self, new_model):
         attrs = set([k for k, v in self._attribute_handlers.items() if v.autoAddEnabled()])
@@ -370,8 +375,22 @@ class PropertyEditor(QWidget):
             hotkey.activated.connect(button.click)
             self._class_shortcuts[label_class] = hotkey
 
+    def addComboClass(self, label_config):
+        if 'text' not in label_config:
+            raise ImproperlyConfigured("Combobox with no text found")
+        attrs = label_config['text']
+        if 'items' not in label_config:
+            raise ImproperlyConfigured("Combobox with no items found")
+        items = label_config['items']
+
+        combobox = ComboItem(label_config)
+        self._combo_items.append(combobox)
+        self._combobox_layout.addRow(attrs, combobox)
+
     def onImageItemChanged(self, image_item):
         self._noteitem.loadNote(image_item)
+        for item in self._combo_items:
+            item.onImageItemChanged(image_item)
 
     def parseConfiguration(self, label_class, label_config):
         attrs = label_config['attributes']
@@ -464,10 +483,17 @@ class PropertyEditor(QWidget):
         self._classbox_layout = FloatingLayout()
         self._classbox.setLayout(self._classbox_layout)
 
+        self._combobox = QGroupBox("Combobox", self)
+        self._combobox_layout = QFormLayout(self)
+        self._combobox.setLayout(self._combobox_layout)
+
         # Global widget
         self._layout = MyVBoxLayout()
         self.setLayout(self._layout)
         self._layout.addWidget(self._classbox, 0)
         self._layout.addStretch(1)
 
-        self._layout.addWidget(self._noteitem, 1)
+        self._layout.addWidget(self._combobox, 1)
+        self._layout.addStretch(1)
+
+        self._layout.addWidget(self._noteitem, 2)
