@@ -236,6 +236,7 @@ class LabelTool(QObject):
 
         self.statusMessage.emit(msg)
         self.annotationsLoaded.emit()
+        self.gotoNext()
 
     def annotations(self):
         if self._model is None:

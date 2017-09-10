@@ -327,7 +327,7 @@ class MainWindow(QMainWindow):
         self.ui.action_About.triggered.connect(self.about)
 
         ## Navigation
-        self.ui.action_Add_Image.triggered.connect(self.addMediaFile)
+        self.ui.action_Add_ImageDir.triggered.connect(self.addDir)
         self.ui.actionNext.      triggered.connect(self.labeltool.gotoNext)
         self.ui.actionPrevious.  triggered.connect(self.labeltool.gotoPrevious)
         self.ui.actionZoom_In.   triggered.connect(functools.partial(self.view.setScaleRelative, 1.2))
@@ -436,26 +436,24 @@ class MainWindow(QMainWindow):
         f.close()
         return myhash.hexdigest()
 
-    def addMediaFile(self):
+    def addDir(self):
         path = '.'
         filename = self.labeltool.getCurrentFilename()
         if (filename is not None) and (len(filename) > 0):
             path = QFileInfo(filename).path()
 
-        image_types = [ '*.jpg', '*.bmp', '*.png', '*.pgm', '*.ppm', '*.tiff', '*.tif', '*.gif' ]
-        video_types = [ '*.mp4', '*.mpg', '*.mpeg', '*.avi', '*.mov', '*.vob' ]
-        format_str = ' '.join(image_types + video_types)
-        fnames = QFileDialog.getOpenFileNames(self, "%s - Add Media File" % APP_NAME, path, "Media files (%s)" % (format_str, ))
+        image_types = [ '*.jpg', '*.bmp', '*.png', '*.pgm', '*.ppm', '*.tiff', '*.tif', '*.gif']
 
-        item = None
-        numFiles = len(fnames)
-        progress_bar = QProgressDialog('Importing files...', 'Cancel import', 0, numFiles, self)
-        for fname,c in zip(fnames, range(numFiles)):
-            if len(str(fname)) == 0:
-                continue
+        dialog = QFileDialog(self)
+        dialog.setFileMode(QFileDialog.DirectoryOnly)
+        dirname = dialog.getExistingDirectory(self, "%s - Add Media File" % APP_NAME, path, QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks);
 
-            fname = str(fname)
+        os.chdir(dirname)
+        dirname = str(dirname)
+        flag = True
 
+        for filename in os.listdir(dirname):
+            fname = os.path.join(dirname, filename)
             if os.path.isabs(fname):
                 fname = os.path.relpath(fname, str(path))
 
@@ -463,15 +461,9 @@ class MainWindow(QMainWindow):
                 if fnmatch.fnmatch(fname.lower(), pattern):
                     image_md5 = self.getMd5(fname)
                     item = self.labeltool.addImageFile(fname, image_md5)
-
-            progress_bar.setValue(c)
-
-        if item is None:
-            return self.labeltool.addVideoFile(fname)
-
-        progress_bar.close()
-
-        return item
+                    if flag:
+                        self.labeltool.setCurrentImage(item)
+                        flag = False
 
     def onViewsLockedChanged(self, checked):
         features = QDockWidget.AllDockWidgetFeatures
