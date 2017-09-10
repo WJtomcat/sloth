@@ -17,6 +17,7 @@ from sloth.core.utils import import_callable
 from sloth.annotations.model import AnnotationTreeView, FrameModelItem, ImageFileModelItem, CopyAnnotations, InterpolateRange
 from sloth import APP_NAME, ORGANIZATION_DOMAIN
 from sloth.utils.bind import bind, compose_noargs
+import hashlib
 
 GUIDIR=os.path.join(os.path.dirname(__file__))
 
@@ -422,6 +423,19 @@ class MainWindow(QMainWindow):
             return self.labeltool.saveAnnotations(str(fname))
         return False
 
+    def getMd5(self, filename):
+        if not os.path.isfile(filename):
+            return
+        myhash = hashlib.md5()
+        f = file(filename, 'rb')
+        while True:
+            b = f.read(8096)
+            if not b:
+                break
+            myhash.update(b)
+        f.close()
+        return myhash.hexdigest()
+
     def addMediaFile(self):
         path = '.'
         filename = self.labeltool.getCurrentFilename()
@@ -447,7 +461,8 @@ class MainWindow(QMainWindow):
 
             for pattern in image_types:
                 if fnmatch.fnmatch(fname.lower(), pattern):
-                    item = self.labeltool.addImageFile(fname)
+                    image_md5 = self.getMd5(fname)
+                    item = self.labeltool.addImageFile(fname, image_md5)
 
             progress_bar.setValue(c)
 
