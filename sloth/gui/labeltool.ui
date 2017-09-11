@@ -42,7 +42,7 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
-    <addaction name="action_Add_Image"/>
+    <addaction name="action_Add_ImageDir"/>
    </widget>
    <widget class="QMenu" name="menu_Views">
     <property name="title">
@@ -101,7 +101,7 @@
    <addaction name="actionSave"/>
    <addaction name="actionSave_As"/>
    <addaction name="separator"/>
-   <addaction name="action_Add_Image"/>
+   <addaction name="action_Add_ImageDir"/>
    <addaction name="actionPrevious"/>
    <addaction name="actionNext"/>
    <addaction name="actionZoom_In"/>
@@ -186,16 +186,16 @@
     <enum>QAction::QuitRole</enum>
    </property>
   </action>
-  <action name="action_Add_Image">
+  <action name="action_Add_ImageDir">
    <property name="icon">
     <iconset resource="icons.qrc">
      <normaloff>:/icons/picture_add.png</normaloff>:/icons/picture_add.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Add Image</string>
+    <string>&amp;Add ImageDir</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+I</string>
+    <string>Ctrl+D</string>
    </property>
   </action>
   <action name="actionNext">

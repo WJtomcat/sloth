@@ -17,6 +17,7 @@ from sloth.core.utils import import_callable
 from sloth.annotations.model import AnnotationTreeView, FrameModelItem, ImageFileModelItem, CopyAnnotations, InterpolateRange
 from sloth import APP_NAME, ORGANIZATION_DOMAIN
 from sloth.utils.bind import bind, compose_noargs
+import hashlib
 
 GUIDIR=os.path.join(os.path.dirname(__file__))
 
@@ -326,7 +327,7 @@ class MainWindow(QMainWindow):
         self.ui.action_About.triggered.connect(self.about)
 
         ## Navigation
-        self.ui.action_Add_Image.triggered.connect(self.addMediaFile)
+        self.ui.action_Add_ImageDir.triggered.connect(self.addDir)
         self.ui.actionNext.      triggered.connect(self.labeltool.gotoNext)
         self.ui.actionPrevious.  triggered.connect(self.labeltool.gotoPrevious)
         self.ui.actionZoom_In.   triggered.connect(functools.partial(self.view.setScaleRelative, 1.2))
@@ -422,41 +423,47 @@ class MainWindow(QMainWindow):
             return self.labeltool.saveAnnotations(str(fname))
         return False
 
-    def addMediaFile(self):
+    def getMd5(self, filename):
+        if not os.path.isfile(filename):
+            return
+        myhash = hashlib.md5()
+        f = file(filename, 'rb')
+        while True:
+            b = f.read(8096)
+            if not b:
+                break
+            myhash.update(b)
+        f.close()
+        return myhash.hexdigest()
+
+    def addDir(self):
         path = '.'
         filename = self.labeltool.getCurrentFilename()
         if (filename is not None) and (len(filename) > 0):
             path = QFileInfo(filename).path()
 
-        image_types = [ '*.jpg', '*.bmp', '*.png', '*.pgm', '*.ppm', '*.tiff', '*.tif', '*.gif' ]
-        video_types = [ '*.mp4', '*.mpg', '*.mpeg', '*.avi', '*.mov', '*.vob' ]
-        format_str = ' '.join(image_types + video_types)
-        fnames = QFileDialog.getOpenFileNames(self, "%s - Add Media File" % APP_NAME, path, "Media files (%s)" % (format_str, ))
+        image_types = [ '*.jpg', '*.bmp', '*.png', '*.pgm', '*.ppm', '*.tiff', '*.tif', '*.gif']
 
-        item = None
-        numFiles = len(fnames)
-        progress_bar = QProgressDialog('Importing files...', 'Cancel import', 0, numFiles, self)
-        for fname,c in zip(fnames, range(numFiles)):
-            if len(str(fname)) == 0:
-                continue
+        dialog = QFileDialog(self)
+        dialog.setFileMode(QFileDialog.DirectoryOnly)
+        dirname = dialog.getExistingDirectory(self, "%s - Add Media File" % APP_NAME, path, QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks);
 
-            fname = str(fname)
+        os.chdir(dirname)
+        dirname = str(dirname)
+        flag = True
 
+        for filename in os.listdir(dirname):
+            fname = os.path.join(dirname, filename)
             if os.path.isabs(fname):
                 fname = os.path.relpath(fname, str(path))
 
             for pattern in image_types:
                 if fnmatch.fnmatch(fname.lower(), pattern):
-                    item = self.labeltool.addImageFile(fname)
-
-            progress_bar.setValue(c)
-
-        if item is None:
-            return self.labeltool.addVideoFile(fname)
-
-        progress_bar.close()
-
-        return item
+                    image_md5 = self.getMd5(fname)
+                    item = self.labeltool.addImageFile(fname, image_md5)
+                    if flag:
+                        self.labeltool.setCurrentImage(item)
+                        flag = False
 
     def onViewsLockedChanged(self, checked):
         features = QDockWidget.AllDockWidgetFeatures

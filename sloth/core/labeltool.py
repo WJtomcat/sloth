@@ -236,6 +236,7 @@ class LabelTool(QObject):
 
         self.statusMessage.emit(msg)
         self.annotationsLoaded.emit()
+        self.gotoNext()
 
     def annotations(self):
         if self._model is None:
@@ -346,11 +347,13 @@ class LabelTool(QObject):
     def getAnnotationFilePatterns(self):
         return self._container_factory.patterns()
 
-    def addImageFile(self, fname):
+    def addImageFile(self, fname, md5):
         fileitem = {
             'filename': fname,
             'class': 'image',
+            'md5': md5,
             'annotations': [],
+            'time': []
         }
         return self._model._root.appendFileItem(fileitem)
 

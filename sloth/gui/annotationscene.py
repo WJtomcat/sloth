@@ -6,6 +6,7 @@ from sloth.utils import toQImage
 from sloth.conf import config
 import logging
 import functools
+import time
 LOG = logging.getLogger(__name__)
 
 
@@ -29,6 +30,12 @@ class AnnotationScene(QGraphicsScene):
         except:
             self.setBackgroundBrush(Qt.darkGray)
         self.reset()
+        self.inputflag = False
+        self.inittime = None
+        self.endtime = None
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.idletime)
+        self.waitEvent = False
 
     #
     # getters/setters
@@ -72,7 +79,13 @@ class AnnotationScene(QGraphicsScene):
         """
         if current_image == self._image_item:
             return
-        elif current_image is None:
+
+        if self.inputflag:
+            self.setEndtime()
+            self.addTime()
+            self.inputflag = False
+
+        if current_image is None:
             self.clear()
             self._image_item = None
             self._image      = None
@@ -135,6 +148,11 @@ class AnnotationScene(QGraphicsScene):
 
         self.deselectAllItems()
 
+        if not self.inputflag:
+            self.inputflag = True
+            self.inittime = time.ctime()
+            self.timer.start(60000)
+
         # Add new inserter
         default_properties = self._labeltool.propertyeditor().currentEditorProperties()
         inserter = self._inserterfactory.create(label_class, self._labeltool, self, default_properties)
@@ -149,9 +167,52 @@ class AnnotationScene(QGraphicsScene):
 
 
     def onInsertionModeEnded(self):
+        if self.inputflag:
+            tmptime = self._image_item['time']
+            if len(tmptime) > 0 and self.inittime == tmptime[-1][0]:
+                self.endtime = time.ctime()
+                tmptime[-1][-1] = self.endtime
+                self._image_item.update({'time' : tmptime})
+            else:
+                self.endtime = time.ctime()
+                tmptime.append([self.inittime, self.endtime])
+                self._image_item.update({'time' : tmptime})
         if self._inserter is not None:
             self._inserter.abort()
         self.views()[0].viewport().setCursor(Qt.ArrowCursor)
+
+    def setEndtime(self):
+        self.endtime = time.ctime()
+
+    def setInittime(self):
+        self.inittime = time.ctime()
+
+    def addTime(self):
+        if self._image_item is None:
+            return
+        tmptime = self._image_item['time']
+        if len(tmptime) > 0 and tmptime[-1][0] == self.inittime:
+            self.endtime = time.ctime()
+            tmptime[-1][-1] = self.endtime
+            self._image_item.update({'time' : tmptime})
+        else:
+            self.endtime = time.ctime()
+            tmptime.append([self.inittime, self.endtime])
+            self._image_item.update({'time' : tmptime})
+        self.inittime = None
+        self.endtime = None
+        # print('addTime')
+
+    def idletime(self):
+        # print('idletime')
+        if not self.inputflag and not self.waitEvent:
+            return
+        self.endtime = time.ctime()
+        self.addTime()
+        if self._inserter is not None:
+            self.waitEvent = True
+        else:
+            self.inputflag = False
 
     #
     # common methods
@@ -179,6 +240,10 @@ class AnnotationScene(QGraphicsScene):
     #
     def mousePressEvent(self, event):
         LOG.debug("mousePressEvent %s %s" % (self.sceneRect().contains(event.scenePos()), event.scenePos()))
+        self.timer.start(60000)
+        if self.waitEvent:
+            self.inittime = time.ctime()
+            self.waitEvent = False
         if self._inserter is not None:
             if not self.sceneRect().contains(event.scenePos()) and \
                not self._inserter.allowOutOfSceneEvents():
@@ -192,6 +257,10 @@ class AnnotationScene(QGraphicsScene):
 
     def mouseDoubleClickEvent(self, event):
         LOG.debug("mouseDoubleClickEvent %s %s" % (self.sceneRect().contains(event.scenePos()), event.scenePos()))
+        self.timer.start(60000)
+        if self.waitEvent:
+            self.inittime = time.ctime()
+            self.waitEvent = False
         if self._inserter is not None:
             if not self.sceneRect().contains(event.scenePos()) and \
                     not self._inserter.allowOutOfSceneEvents():
@@ -205,6 +274,10 @@ class AnnotationScene(QGraphicsScene):
 
     def mouseReleaseEvent(self, event):
         LOG.debug("mouseReleaseEvent %s %s" % (self.sceneRect().contains(event.scenePos()), event.scenePos()))
+        self.timer.start(60000)
+        if self.waitEvent:
+            self.inittime = time.ctime()
+            self.waitEvent = False
         if self._inserter is not None:
             # insert mode
             self._inserter.mouseReleaseEvent(event, self._image_item)
@@ -213,6 +286,10 @@ class AnnotationScene(QGraphicsScene):
             QGraphicsScene.mouseReleaseEvent(self, event)
 
     def mouseMoveEvent(self, event):
+        self.timer.start(60000)
+        if self.waitEvent:
+            self.inittime = time.ctime()
+            self.waitEvent = False
         sp = event.scenePos()
         self.mousePositionChanged.emit(sp.x(), sp.y())
         #LOG.debug("mouseMoveEvent %s %s" % (self.sceneRect().contains(event.scenePos()), event.scenePos()))
@@ -292,6 +369,10 @@ class AnnotationScene(QGraphicsScene):
 
     def keyPressEvent(self, event):
         LOG.debug("keyPressEvent %s" % event)
+        self.timer.start(60000)
+        if self.waitEvent:
+            self.inittime = time.ctime()
+            self.waitEvent = False
 
         if self._model is None or self._image_item is None:
             event.ignore()
@@ -410,7 +491,7 @@ class AnnotationScene(QGraphicsScene):
 
             self._message_text_item.paint(painter, QStyleOptionGraphicsItem(), None)
 
-    # 
+    #
     # utility functions
     #
 
@@ -491,4 +572,3 @@ class AnnotationScene(QGraphicsScene):
 
         functools.update_wrapper(paint, oldpaint)
         RectItem.paint = paint
-
