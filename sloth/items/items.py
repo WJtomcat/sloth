@@ -1,5 +1,7 @@
 import logging
 from PyQt4.Qt import *
+from sloth.items.inserters import *
+from sloth.conf import config
 
 
 LOG = logging.getLogger(__name__)
@@ -104,20 +106,12 @@ class BaseItem(QAbstractGraphicsShapeItem):
         self.changeColor()
 
     def changeColor(self):
-        if self._model_item is not None:
-            c = self._model_item.getColor()
-            if c is not None:
-                self.setColor(c)
-                return
-        self.setColor(Qt.yellow)
+        pass
 
     def onDataChanged(self, indexFrom, indexTo):
         # FIXME why is this not updated, when changed graphically via attribute box ?
         #print "onDataChanged", self._model_item.index(), indexFrom, indexTo, indexFrom.parent()
-        if indexFrom == self._model_item.index():
-            self.changeColor()
-            #print "hit"
-            # self._text_item.setHtml(self._compile_text())
+        pass
 
     def modelItem(self):
         """
@@ -767,15 +761,22 @@ class PolygonItem(BaseItem):
                       QGraphicsItem.ItemSendsGeometryChanges |
                       QGraphicsItem.ItemSendsScenePositionChanges)
         self._polygon = None
+        self.setOpacity(0.6)
 
         self._updatePolygon(self._dataToPolygon(self._model_item))
         LOG.debug("Constructed polygon %s for model item %s" %
                   (self._polygon, model_item))
+        self.pos = None
+        color = config.COLORMAP[model_item['class']]
+        brush = QBrush(QColor(color[0], color[1], color[2], 255), Qt.SolidPattern)
+        self.setBrush(brush)
+        pen = QPen()
+        pen.setStyle(Qt.NoPen)
+        self.setPen(pen)
 
     def __call__(self, model_item=None, parent=None):
         item = PolygonItem(model_item, parent)
         item.setPen(self.pen())
-        item.setBrush(self.brush())
         return item
 
     def _dataToPolygon(self, model_item):
@@ -787,8 +788,7 @@ class PolygonItem(BaseItem):
             xn = [float(x) for x in model_item["xn"].split(";")]
             yn = [float(y) for y in model_item["yn"].split(";")]
             for x, y in zip(xn, yn):
-              polygon.append(QPointF(x, y))
-
+                polygon.append(QPointF(x, y))
             return polygon
 
         except KeyError as e:
@@ -805,6 +805,21 @@ class PolygonItem(BaseItem):
         self._polygon = polygon
         self.setPos(QPointF(0, 0))
 
+    def itemChange(self, change, value):
+        if change == QGraphicsItem.ItemMatrixChange:
+            self.updateModel()
+        return QAbstractGraphicsShapeItem.itemChange(self, change, value)
+
+    def updateModel(self):
+        xn = [str(p.x()) for p in self._polygon]
+        yn = [str(p.y()) for p in self._polygon]
+        strx = ';'.join(xn)
+        stry = ';'.join(yn)
+        self._model_item.update({
+            self.prefix() + 'xn': strx,
+            self.prefix() + 'yn': stry
+        })
+
     def boundingRect(self):
         xn = [p.x() for p in self._polygon]
         yn = [p.y() for p in self._polygon]
@@ -815,18 +830,24 @@ class PolygonItem(BaseItem):
         return QRectF(xmin, ymin, xmax - xmin, ymax - ymin)
 
     def paint(self, painter, option, widget=None):
-        BaseItem.paint(self, painter, option, widget)
-
         pen = self.pen()
         if self.isSelected():
-            pen.setStyle(Qt.DashLine)
+            self.setOpacity(0.8)
+        else:
+            self.setOpacity(0.6)
+        pen.setStyle(Qt.NoPen)
         painter.setPen(pen)
+        painter.setBrush(self.brush())
+        painter.drawPolygon(self._polygon)
 
-        for k in range(-1, len(self._polygon)-1):
-            p1 = self._polygon[k]
-            p2 = self._polygon[k+1]
-            painter.drawLine(p1, p2)
 
     def dataChange(self):
         polygon = self._dataToPolygon(self._model_item)
         self._updatePolygon(polygon)
+
+    def subtract(self, other):
+        newpolygon = self._polygon.subtracted(other)
+        if newpolygon == self._polygon:
+            return
+        self._updatePolygon(newpolygon)
+        self.updateModel()

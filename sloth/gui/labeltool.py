@@ -173,6 +173,7 @@ class MainWindow(QMainWindow):
 
     def onScaleChanged(self, scale):
         self.zoominfo.setText("%.2f%%" % (100 * scale, ))
+        self.scene.scaleChanged(scale)
 
     def initShortcuts(self, HOTKEYS):
         self.shortcuts = []
@@ -448,8 +449,9 @@ class MainWindow(QMainWindow):
         dialog.setFileMode(QFileDialog.DirectoryOnly)
         dirname = dialog.getExistingDirectory(self, "%s - Add Media File" % APP_NAME, path, QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks);
 
-        os.chdir(dirname)
         dirname = str(dirname)
+        os.chdir(dirname)
+
         flag = True
 
         for filename in os.listdir(dirname):
