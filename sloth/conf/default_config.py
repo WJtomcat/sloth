@@ -36,39 +36,74 @@
 LABELS = (
     {
         'attributes': {
-            'class':      'Face',
+            'class':    'TZ',
         },
-        'inserter': 'sloth.items.RectItemInserter',
-        'item':     'sloth.items.RectItem',
-        'hotkey':   'f',
-        'text':     'Face',
-    },
-    {
-        'attributes': {
-            'class':      'rect',
-        },
-        'inserter': 'sloth.items.RectItemInserter',
-        'item':     'sloth.items.RectItem',
-        'hotkey':   'r',
-        'text':     'Rectangle',
-    },
-    {
-        'attributes': {
-            'class':    'point',
-        },
-        'inserter': 'sloth.items.PointItemInserter',
-        'item':     'sloth.items.PointItem',
-        'hotkey':   'p',
-        'text':     'Point',
-    },
-    {
-        'attributes': {
-            'class':    'polygon',
-        },
-        'inserter': 'sloth.items.PolygonItemInserter',
+        'inserter': 'sloth.items.FreehandItemInserter',
         'item':     'sloth.items.PolygonItem',
-        'hotkey':   'o',
-        'text':     'Polygon',
+        'hotkey':   't',
+        'text':     'TZ(t)',
+    },
+    {
+        'attributes': {
+            'class':    'SCJ',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   's',
+        'text':     'SCJ(s)',
+    },
+    {
+        'attributes': {
+            'class':    'CIS',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'c',
+        'text':     'CIS(c)',
+    },
+    {
+        'attributes': {
+            'class':    'CIGN',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'g',
+        'text':     'CIGN(g)',
+    },
+    {
+        'attributes': {
+            'class':    'PUN',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'p',
+        'text':     'PUN(p)',
+    },
+    {
+        'attributes': {
+            'class':    'MOS',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'm',
+        'text':     'MOS(m)',
+    },
+    {
+        'attributes': {
+            'class':    'AE',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'a',
+        'text':     'AE(a)',
+    },
+    {
+        'attributes': {
+            'class':    'Eraser',
+        },
+        'inserter': 'sloth.items.FreehandEraser',
+        'hotkey':   'Ctrl+e',
+        'text':     'Eraser(e)',
     },
 )
 
@@ -82,6 +117,35 @@ COMBOCLASS= (
         'items':     ['default', 'pre-lodine', 'post-lodine', 'pre acetowhite', 'post acetowhite'],
     }
 )
+
+def color_map(N=256):
+    def bitget(byteval, idx):
+        return ((byteval & (1 << idx)) != 0)
+    cmap = []
+    for i in range(N):
+        r = g = b = 0
+        c = i
+        for j in range(8):
+            r = r | (bitget(c, 0) << 7-j)
+            g = g | (bitget(c, 1) << 7-j)
+            b = b | (bitget(c, 2) << 7-j)
+            c = c >> 3
+        cmap.append([r, g, b])
+    return cmap
+
+classes = ['Eraser', 'TZ', 'SCJ', 'CIS', 'CIGN', 'PUN', 'MOS', 'AE']
+
+def getcolormap():
+    cmap = color_map()
+    colormap = {}
+    cmap = cmap[1:len(cmap)]
+    for label, color in zip(classes, cmap):
+        colormap[label] = color
+    return colormap
+
+COLORMAP = getcolormap()
+
+
 # HOTKEYS
 #
 # Defines the keyboard shortcuts.  Each hotkey is defined by a tuple

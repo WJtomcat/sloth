@@ -158,9 +158,13 @@ class AnnotationScene(QGraphicsScene):
         inserter = self._inserterfactory.create(label_class, self._labeltool, self, default_properties)
         if inserter is None:
             raise InvalidArgumentException("Could not find inserter for class '%s' with default properties '%s'" % (label_class, default_properties))
+        if isinstance(inserter, FreehandItemInserter):
+            inserter.setColorMap(label_class)
         inserter.inserterFinished.connect(self.onInserterFinished)
         self._labeltool.currentImageChanged.connect(inserter.imageChange)
         self._inserter = inserter
+        scale = self._labeltool.mainWindow().view.getScale()
+        self._inserter.setScale(scale)
         LOG.debug("Created inserter for class '%s' with default properties '%s'" % (label_class, default_properties))
         # Change cursor to cross
         self.views()[0].viewport().setCursor(Qt.CrossCursor)
@@ -201,10 +205,8 @@ class AnnotationScene(QGraphicsScene):
             self._image_item.update({'time' : tmptime})
         self.inittime = None
         self.endtime = None
-        # print('addTime')
 
     def idletime(self):
-        # print('idletime')
         if not self.inputflag and not self.waitEvent:
             return
         self.endtime = time.ctime()
@@ -213,6 +215,10 @@ class AnnotationScene(QGraphicsScene):
             self.waitEvent = True
         else:
             self.inputflag = False
+
+    def scaleChanged(self, scale):
+        if self._inserter is not None:
+            self._inserter.onScaleChanged(scale)
 
     #
     # common methods

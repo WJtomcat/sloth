@@ -173,6 +173,7 @@ class MainWindow(QMainWindow):
 
     def onScaleChanged(self, scale):
         self.zoominfo.setText("%.2f%%" % (100 * scale, ))
+        self.scene.scaleChanged(scale)
 
     def initShortcuts(self, HOTKEYS):
         self.shortcuts = []
