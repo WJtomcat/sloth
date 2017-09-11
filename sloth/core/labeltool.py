@@ -353,6 +353,7 @@ class LabelTool(QObject):
             'class': 'image',
             'md5': md5,
             'annotations': [],
+            'time': []
         }
         return self._model._root.appendFileItem(fileitem)
 
