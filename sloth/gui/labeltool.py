@@ -449,8 +449,9 @@ class MainWindow(QMainWindow):
         dialog.setFileMode(QFileDialog.DirectoryOnly)
         dirname = dialog.getExistingDirectory(self, "%s - Add Media File" % APP_NAME, path, QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks);
 
-        os.chdir(dirname)
         dirname = str(dirname)
+        os.chdir(dirname)
+
         flag = True
 
         for filename in os.listdir(dirname):
