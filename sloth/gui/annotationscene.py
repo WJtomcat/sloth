@@ -24,6 +24,7 @@ class AnnotationScene(QGraphicsScene):
 
         self._itemfactory = Factory(items)
         self._inserterfactory = Factory(inserters)
+        self._opaque = 0.6
 
         try:
             self.setBackgroundBrush(config.SCENE_BACKGROUND)
@@ -93,6 +94,7 @@ class AnnotationScene(QGraphicsScene):
         else:
             self.clear()
             self._image_item = current_image
+            self._opaque = 0.6
             current_image._seen = True
             assert self._image_item.model() == self._model
             self._image      = self._labeltool.getImage(self._image_item)
@@ -124,6 +126,8 @@ class AnnotationScene(QGraphicsScene):
             item = self._itemfactory.create(label_class, child)
             if item is not None:
                 self.addItem(item)
+                if isinstance(item, PolygonItem):
+                    item.opaqueChanged(self._opaque)
             else:
                 LOG.debug("Could not find item for annotation with class '%s'" % label_class)
 
@@ -134,6 +138,28 @@ class AnnotationScene(QGraphicsScene):
         modelitems_to_delete = dict((id(item.modelItem()), item.modelItem()) for item in self.selectedItems())
         for item in modelitems_to_delete.values():
             item.delete()
+
+    def onSliderChanged(self, value):
+        print(value)
+        print('onSliderChanged')
+        opaque = float(value)/100
+        self._opaque = opaque
+        for item in self.items():
+            if isinstance(item, PolygonItem):
+                item.opaqueChanged(self._opaque)
+
+    def onCheckChanged(self, state):
+        if state == Qt.Checked:
+            for item in self.items():
+                if isinstance(item, PolygonItem):
+                    self.removeItem(item)
+
+        elif state == Qt.Unchecked:
+            for item in self.items():
+                if isinstance(item, PolygonItem):
+                    self.removeItem(item)
+            self.insertItems(0, len(self._image_item.children())-1)            
+
 
     def onInserterFinished(self):
         self.sender().inserterFinished.disconnect(self.onInserterFinished)

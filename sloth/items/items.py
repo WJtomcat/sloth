@@ -773,6 +773,7 @@ class PolygonItem(BaseItem):
         pen = QPen()
         pen.setStyle(Qt.NoPen)
         self.setPen(pen)
+        self._opacity = 0.6
 
     def __call__(self, model_item=None, parent=None):
         item = PolygonItem(model_item, parent)
@@ -832,9 +833,12 @@ class PolygonItem(BaseItem):
     def paint(self, painter, option, widget=None):
         pen = self.pen()
         if self.isSelected():
-            self.setOpacity(0.8)
+            if self._opacity >= 0.8 :
+                self.setOpacity(1)
+            else:
+                self.setOpacity(self._opacity + 0.2)
         else:
-            self.setOpacity(0.6)
+            self.setOpacity(self._opacity)
         pen.setStyle(Qt.NoPen)
         painter.setPen(pen)
         painter.setBrush(self.brush())
@@ -851,3 +855,7 @@ class PolygonItem(BaseItem):
             return
         self._updatePolygon(newpolygon)
         self.updateModel()
+
+    def opaqueChanged(self, value):
+        self._opacity = value
+        self.update()

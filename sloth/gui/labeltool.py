@@ -252,6 +252,9 @@ class MainWindow(QMainWindow):
         self.property_editor.insertionModeStarted.connect(self.scene.onInsertionModeStarted)
         self.property_editor.insertionModeEnded.connect(self.scene.onInsertionModeEnded)
 
+        self.property_editor.sliderChanged.connect(self.scene.onSliderChanged)
+        self.property_editor.checkChanged.connect(self.scene.onCheckChanged)
+
         # SceneView
         self.view = GraphicsView(self)
         self.view.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)

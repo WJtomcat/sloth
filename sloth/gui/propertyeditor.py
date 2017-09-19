@@ -1,7 +1,7 @@
 import time
 import logging
 from PyQt4.QtCore import pyqtSignal, QSize, Qt
-from PyQt4.QtGui import QWidget, QGroupBox, QFormLayout, QVBoxLayout, QPushButton, QScrollArea, QLineEdit, QDoubleValidator, QIntValidator, QShortcut, QKeySequence
+from PyQt4.QtGui import QWidget, QGroupBox, QFormLayout, QVBoxLayout, QHBoxLayout, QCheckBox, QPushButton, QScrollArea, QLineEdit, QDoubleValidator, QIntValidator, QShortcut, QKeySequence, QSlider
 from sloth.core.exceptions import ImproperlyConfigured
 from sloth.annotations.model import AnnotationModelItem
 from sloth.gui.floatinglayout import FloatingLayout
@@ -304,6 +304,9 @@ class PropertyEditor(QWidget):
     insertionPropertiesChanged = pyqtSignal(object)
     editPropertiesChanged      = pyqtSignal(object)
 
+    sliderChanged              = pyqtSignal(int)
+    checkChanged               = pyqtSignal(int)
+
     def __init__(self, config, parent=None):
         QWidget.__init__(self, parent)
         self._class_config       = {}
@@ -315,6 +318,19 @@ class PropertyEditor(QWidget):
         self._noteitem = NoteItem()
         self._combo_items = []
 
+        self.hlayout = QHBoxLayout()
+
+        self.opaque_check = QCheckBox("hide")
+
+        self.hlayout.addWidget(self.opaque_check, 0)
+
+        self.opaque_slider = QSlider(Qt.Horizontal)
+        self.opaque_slider.setMinimum(30)
+        self.opaque_slider.valueChanged.connect(self.onSliderChanged)
+
+        self.opaque_check.stateChanged.connect(self.onCheckChanged)
+
+        self.hlayout.addWidget(self.opaque_slider, 1)
         self._setupGUI()
 
         # Add label classes from config
@@ -323,6 +339,14 @@ class PropertyEditor(QWidget):
 
         for label in config.COMBOCLASS:
             self.addComboClass(label)
+
+    def onCheckChanged(self, state):
+        self.checkChanged.emit(state)
+        print(state)
+
+    def onSliderChanged(self, value):
+        self.sliderChanged.emit(value)
+        print(value)
 
     def onModelChanged(self, new_model):
         attrs = set([k for k, v in self._attribute_handlers.items() if v.autoAddEnabled()])
@@ -391,6 +415,13 @@ class PropertyEditor(QWidget):
         self._noteitem.loadNote(image_item)
         for item in self._combo_items:
             item.onImageItemChanged(image_item)
+        self.opaque_slider.valueChanged.disconnect(self.onSliderChanged)
+        self.opaque_slider.setValue(60)
+        self.opaque_slider.valueChanged.connect(self.onSliderChanged)
+
+        self.opaque_check.stateChanged.disconnect(self.onCheckChanged)
+        self.opaque_check.setCheckState(Qt.Unchecked)
+        self.opaque_check.stateChanged.connect(self.onCheckChanged)
 
     def parseConfiguration(self, label_class, label_config):
         attrs = label_config['attributes']
@@ -491,9 +522,13 @@ class PropertyEditor(QWidget):
         self._layout = MyVBoxLayout()
         self.setLayout(self._layout)
         self._layout.addWidget(self._classbox, 0)
+
+        self._opaquebox = QGroupBox(self)
+        self._opaquebox.setLayout(self.hlayout)
+        self._layout.addWidget(self._opaquebox, 1)
         self._layout.addStretch(1)
 
-        self._layout.addWidget(self._combobox, 1)
+        self._layout.addWidget(self._combobox, 2)
         self._layout.addStretch(1)
 
-        self._layout.addWidget(self._noteitem, 2)
+        self._layout.addWidget(self._noteitem, 3)
