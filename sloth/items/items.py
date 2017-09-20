@@ -2,6 +2,7 @@ import logging
 from PyQt4.Qt import *
 from sloth.items.inserters import *
 from sloth.conf import config
+from PyQt4.QtGui import QMenu
 
 
 LOG = logging.getLogger(__name__)
@@ -753,6 +754,7 @@ class NPointFaceItem(GroupItem):
         painter.drawRect(self.boundingRect())
 
 class PolygonItem(BaseItem):
+
     def __init__(self, model_item=None, prefix="", parent=None):
         BaseItem.__init__(self, model_item, prefix, parent)
 
@@ -774,6 +776,8 @@ class PolygonItem(BaseItem):
         pen.setStyle(Qt.NoPen)
         self.setPen(pen)
         self._opacity = 0.6
+
+        self.createMenu()
 
     def __call__(self, model_item=None, parent=None):
         item = PolygonItem(model_item, parent)
@@ -859,3 +863,25 @@ class PolygonItem(BaseItem):
     def opaqueChanged(self, value):
         self._opacity = value
         self.update()
+
+    def contextMenuEvent(self, event):
+        self.menu.exec_(QCursor.pos())
+
+    def createMenu(self):
+        self.menu = QMenu();
+        self.actionGroup = QActionGroup(self.menu)
+        for i in config.LABELS:
+            itemclass = i['attributes']['class']
+            if itemclass != 'Eraser':
+                action = self.menu.addAction(itemclass)
+            self.actionGroup.addAction(action)
+        self.actionGroup.triggered.connect(self.onMenuAction)
+
+    @pyqtSlot()
+    def onMenuAction(self, action):
+        self._model_item.update({
+            self.prefix() + 'class': str(action.text()),
+        })
+        color = config.COLORMAP[self._model_item['class']]
+        brush = QBrush(QColor(color[0], color[1], color[2], 255), Qt.SolidPattern)
+        self.setBrush(brush)

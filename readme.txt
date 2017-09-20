@@ -1,9 +1,15 @@
-标注图片种类：内科／外科
+标注图片种类：
 
 标注工具(labels):
-区域名称        区域简称        快捷键
+区域名称        区域简称        快捷键       英文名称
 宫颈转化区       TZ            t
 鳞柱交界处       SCJ           s
+宫颈原位癌       CIS           c           carcinoma in situ
+宫颈腺上皮内瘤变  CIGN          g           cervical intraepithelial glandular
+点状            PUN           p           punctation
+镶嵌            MOS           m           mosaic
+醋白上皮         AE            a           acetowhite epithelium
+
 
 
 下拉列表框：

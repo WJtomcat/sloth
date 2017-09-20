@@ -140,8 +140,6 @@ class AnnotationScene(QGraphicsScene):
             item.delete()
 
     def onSliderChanged(self, value):
-        print(value)
-        print('onSliderChanged')
         opaque = float(value)/100
         self._opaque = opaque
         for item in self.items():
@@ -158,7 +156,7 @@ class AnnotationScene(QGraphicsScene):
             for item in self.items():
                 if isinstance(item, PolygonItem):
                     self.removeItem(item)
-            self.insertItems(0, len(self._image_item.children())-1)            
+            self.insertItems(0, len(self._image_item.children())-1)
 
 
     def onInserterFinished(self):

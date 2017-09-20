@@ -342,11 +342,9 @@ class PropertyEditor(QWidget):
 
     def onCheckChanged(self, state):
         self.checkChanged.emit(state)
-        print(state)
 
     def onSliderChanged(self, value):
         self.sliderChanged.emit(value)
-        print(value)
 
     def onModelChanged(self, new_model):
         attrs = set([k for k, v in self._attribute_handlers.items() if v.autoAddEnabled()])
