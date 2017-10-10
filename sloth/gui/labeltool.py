@@ -283,6 +283,9 @@ class MainWindow(QMainWindow):
         self.scene.selectionChanged.connect(self.scene.onSelectionChanged)
         self.treeview.selectedItemsChanged.connect(self.scene.onSelectionChangedInTreeView)
 
+        self.scene.itemChanged.connect(self.property_editor.onItemChanged)
+        self.scene.itemDisSelected.connect(self.property_editor.onItemDisSelected)
+
         self.posinfo = QLabel("-1, -1")
         self.posinfo.setFrameStyle(QFrame.StyledPanel)
         self.statusBar().addPermanentWidget(self.posinfo)

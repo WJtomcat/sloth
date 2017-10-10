@@ -7,8 +7,8 @@ from sloth.annotations.model import AnnotationModelItem
 from sloth.gui.floatinglayout import FloatingLayout
 from sloth.gui.utils import MyVBoxLayout
 from sloth.utils.bind import bind
-from sloth.gui.noteitem import NoteItem
-from sloth.gui.comboitem import ComboItem
+from sloth.gui.noteitem import NoteItem, MaskNoteItem
+from sloth.gui.comboitem import ComboItem, MaskComboItem
 
 
 LOG = logging.getLogger(__name__)
@@ -316,6 +316,10 @@ class PropertyEditor(QWidget):
         self._handler_factory    = AttributeHandlerFactory()
 
         self._noteitem = NoteItem()
+
+        self.masknoteitem = MaskNoteItem()
+        self.maskcomboitem = MaskComboItem()
+
         self._combo_items = []
 
         self.hlayout = QHBoxLayout()
@@ -407,7 +411,7 @@ class PropertyEditor(QWidget):
 
         combobox = ComboItem(label_config)
         self._combo_items.append(combobox)
-        self._combobox_layout.addRow(attrs, combobox)
+        self._imagebox_layout.addRow(attrs, combobox)
 
     def onImageItemChanged(self, image_item):
         self._noteitem.loadNote(image_item)
@@ -420,6 +424,9 @@ class PropertyEditor(QWidget):
         self.opaque_check.stateChanged.disconnect(self.onCheckChanged)
         self.opaque_check.setCheckState(Qt.Unchecked)
         self.opaque_check.stateChanged.connect(self.onCheckChanged)
+
+        self.masknoteitem.resetNote()
+        self.maskcomboitem.resetIndex()
 
     def parseConfiguration(self, label_class, label_config):
         attrs = label_config['attributes']
@@ -512,21 +519,36 @@ class PropertyEditor(QWidget):
         self._classbox_layout = FloatingLayout()
         self._classbox.setLayout(self._classbox_layout)
 
-        self._combobox = QGroupBox("Combobox", self)
-        self._combobox_layout = QFormLayout(self)
-        self._combobox.setLayout(self._combobox_layout)
+        self._imagebox = QGroupBox("Image", self)
+        self._imagebox_layout = QFormLayout(self)
+        self._imagebox.setLayout(self._imagebox_layout)
+        self._imagebox_layout.addRow(self._noteitem)
 
         # Global widget
         self._layout = MyVBoxLayout()
         self.setLayout(self._layout)
         self._layout.addWidget(self._classbox, 0)
+        self._layout.addStretch(1)
 
-        self._opaquebox = QGroupBox(self)
+        self._opaquebox = QGroupBox("Item Transparency", self)
         self._opaquebox.setLayout(self.hlayout)
         self._layout.addWidget(self._opaquebox, 1)
         self._layout.addStretch(1)
 
-        self._layout.addWidget(self._combobox, 2)
+        self._layout.addWidget(self._imagebox, 2)
         self._layout.addStretch(1)
 
-        self._layout.addWidget(self._noteitem, 3)
+        self._itembox = QGroupBox("Item", self)
+        self._itembox_layout = QFormLayout(self)
+        self._itembox.setLayout(self._itembox_layout)
+        self._itembox_layout.addRow(self.masknoteitem)
+        self._itembox_layout.addRow(self.maskcomboitem)
+        self._layout.addWidget(self._itembox)
+
+
+    def onItemChanged(self, item):
+        self.masknoteitem.onItemChanged(item)
+        self.maskcomboitem.onItemChanged(item)
+
+    def onItemDisSelected(self):
+        self.onItemChanged(None)

@@ -70,5 +70,38 @@ class NoteItem(QTextEdit):
                 return
 
 
-    def focusInEvent(self, event):
-        pass
+class MaskNoteItem(QTextEdit):
+    def __init__(self, parent=None, default_properties=None):
+        QTextEdit.__init__(self, parent)
+        self._item = None
+        self.textChanged.connect(self.inputupdate)
+
+    def onItemChanged(self, item):
+        self._item = item
+        self.loadNote()
+
+    def loadNote(self):
+        if self._item is None:
+            self.resetNote()
+            return
+        if not self._item.isSelected():
+            self.resetNote()
+            self._item = None
+            return
+        note = self._item.dataToNote()
+        if note == '':
+            self.resetNote()
+            return
+        else:
+            self.setText(note)
+
+    def inputupdate(self):
+        if self._item is None:
+            return
+        text = unicode(self.toPlainText())
+        self._item.updateModel(note=text)
+
+    def resetNote(self):
+        self.textChanged.disconnect(self.inputupdate)
+        self.setText('')
+        self.textChanged.connect(self.inputupdate)

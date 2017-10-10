@@ -802,6 +802,28 @@ class PolygonItem(BaseItem):
             self.setValid(False)
             return QPolygonF()
 
+    def dataToNote(self):
+        if self._model_item is None:
+            return ''
+        try:
+            note = self._model_item['note']
+            return note
+        except KeyError as e:
+            LOG.debug("PolygonItem: Could not find expected key in item: "
+                      + str(e) + ". Check your config!")
+            return ''
+
+    def dataToIndex(self):
+        if self._model_item is None:
+            return 0
+        try:
+            index = self._model_item['combo']
+            return index
+        except KeyError as e:
+            LOG.debug("PolygonItem: Could not find expected key in item: "
+                      + str(e) + ". Check your config!")
+            return 0
+
     def _updatePolygon(self, polygon):
         if polygon == self._polygon:
             return
@@ -815,15 +837,25 @@ class PolygonItem(BaseItem):
             self.updateModel()
         return QAbstractGraphicsShapeItem.itemChange(self, change, value)
 
-    def updateModel(self):
-        xn = [str(p.x()) for p in self._polygon]
-        yn = [str(p.y()) for p in self._polygon]
-        strx = ';'.join(xn)
-        stry = ';'.join(yn)
-        self._model_item.update({
-            self.prefix() + 'xn': strx,
-            self.prefix() + 'yn': stry
-        })
+    def updateModel(self, note=None, index=None):
+        if note is not None:
+            self._model_item.update({
+                self.prefix() + 'note': note
+            })
+            return
+        elif index is not None:
+            self._model_item.update({
+                self.prefix() + 'combo': index
+            })
+        else:
+            xn = [str(p.x()) for p in self._polygon]
+            yn = [str(p.y()) for p in self._polygon]
+            strx = ';'.join(xn)
+            stry = ';'.join(yn)
+            self._model_item.update({
+                self.prefix() + 'xn': strx,
+                self.prefix() + 'yn': stry
+            })
 
     def boundingRect(self):
         xn = [p.x() for p in self._polygon]

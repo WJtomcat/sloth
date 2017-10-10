@@ -70,3 +70,43 @@ class ComboItem(QComboBox):
     def comboboxChanged(self):
         tmp_index = self.currentIndex()
         self.changeClassesIndex(tmp_index)
+
+
+class MaskComboItem(QComboBox):
+    def __init__(self, parent=None):
+        QComboBox.__init__(self, parent)
+        self._item = None
+        self.currentIndexChanged.connect(self.indexUpdate)
+        self.addItem('default')
+        self.addItem('A')
+        self.addItem('B')
+        self.addItem('C')
+        self.addItem('D')
+
+    def onItemChanged(self, item):
+        self._item = item
+        self.loadIndex()
+
+    def loadIndex(self):
+        if self._item is None:
+            self.resetIndex()
+            return
+        if not self._item.isSelected():
+            self.resetIndex()
+            self._item = None
+            return
+        index = self._item.dataToIndex()
+        self.currentIndexChanged.disconnect(self.indexUpdate)
+        self.setCurrentIndex(index)
+        self.currentIndexChanged.connect(self.indexUpdate)
+
+    def indexUpdate(self):
+        if self._item is None:
+            return
+        index = self.currentIndex()
+        self._item.updateModel(index=index)
+
+    def resetIndex(self):
+        self.currentIndexChanged.disconnect(self.indexUpdate)
+        self.setCurrentIndex(0)
+        self.currentIndexChanged.connect(self.indexUpdate)

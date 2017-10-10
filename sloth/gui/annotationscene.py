@@ -12,6 +12,8 @@ LOG = logging.getLogger(__name__)
 
 class AnnotationScene(QGraphicsScene):
     mousePositionChanged = pyqtSignal(float, float)
+    itemChanged = pyqtSignal(PolygonItem)
+    itemDisSelected = pyqtSignal()
     def __init__(self, labeltool, items=None, inserters=None, parent=None):
         super(AnnotationScene, self).__init__(parent)
 
@@ -37,6 +39,8 @@ class AnnotationScene(QGraphicsScene):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.idletime)
         self.waitEvent = False
+
+        self.selectionChanged.connect(self.onSelectionChanged)
 
     #
     # getters/setters
@@ -335,6 +339,12 @@ class AnnotationScene(QGraphicsScene):
             item.setSelected(False)
 
     def onSelectionChanged(self):
+        if len(self.selectedItems()) == 1:
+            for item in self.selectedItems():
+                if isinstance(item, PolygonItem):
+                    self.itemChanged.emit(item)
+        if len(self.selectedItems()) == 0:
+            self.itemDisSelected.emit()
         model_items = [item.modelItem() for item in self.selectedItems()]
         self._labeltool.treeview().setSelectedItems(model_items)
         self.editSelectedItems()
