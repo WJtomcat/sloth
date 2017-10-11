@@ -12,6 +12,7 @@ class NoteItem(QTextEdit):
         self.textChanged.connect(self.inputupdate)
 
     def loadNote(self, image_item):
+        print('loadNote')
         self.hasitemflag = False
         self.image_item = image_item
         if image_item is None:

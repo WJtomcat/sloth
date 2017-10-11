@@ -64,6 +64,7 @@ class ComboItem(QComboBox):
 
     #load Combo data when imageitem changed
     def onImageItemChanged(self, image_item):
+        print('onImageItemChanged')
         self.hasitemflag = False
         self.loadClasses(image_item)
 

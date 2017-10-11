@@ -304,9 +304,6 @@ class PropertyEditor(QWidget):
     insertionPropertiesChanged = pyqtSignal(object)
     editPropertiesChanged      = pyqtSignal(object)
 
-    sliderChanged              = pyqtSignal(int)
-    checkChanged               = pyqtSignal(int)
-
     def __init__(self, config, parent=None):
         QWidget.__init__(self, parent)
         self._class_config       = {}
@@ -317,24 +314,7 @@ class PropertyEditor(QWidget):
 
         self._noteitem = NoteItem()
 
-        self.masknoteitem = MaskNoteItem()
-        self.maskcomboitem = MaskComboItem()
-
         self._combo_items = []
-
-        self.hlayout = QHBoxLayout()
-
-        self.opaque_check = QCheckBox("hide")
-
-        self.hlayout.addWidget(self.opaque_check, 0)
-
-        self.opaque_slider = QSlider(Qt.Horizontal)
-        self.opaque_slider.setMinimum(30)
-        self.opaque_slider.valueChanged.connect(self.onSliderChanged)
-
-        self.opaque_check.stateChanged.connect(self.onCheckChanged)
-
-        self.hlayout.addWidget(self.opaque_slider, 1)
         self._setupGUI()
 
         # Add label classes from config
@@ -343,12 +323,6 @@ class PropertyEditor(QWidget):
 
         for label in config.COMBOCLASS:
             self.addComboClass(label)
-
-    def onCheckChanged(self, state):
-        self.checkChanged.emit(state)
-
-    def onSliderChanged(self, value):
-        self.sliderChanged.emit(value)
 
     def onModelChanged(self, new_model):
         attrs = set([k for k, v in self._attribute_handlers.items() if v.autoAddEnabled()])
@@ -368,6 +342,12 @@ class PropertyEditor(QWidget):
                 h = self._attribute_handlers[attr]
                 for val in vals:
                     h.addValue(val, True)
+
+    def onImageItemChanged(self, image_item):
+        self._noteitem.loadNote(image_item)
+        for item in self._combo_items:
+            item.onImageItemChanged(image_item)
+        print('onImageChanged')
 
     def addLabelClass(self, label_config):
         # Check label configuration
@@ -412,21 +392,6 @@ class PropertyEditor(QWidget):
         combobox = ComboItem(label_config)
         self._combo_items.append(combobox)
         self._imagebox_layout.addRow(attrs, combobox)
-
-    def onImageItemChanged(self, image_item):
-        self._noteitem.loadNote(image_item)
-        for item in self._combo_items:
-            item.onImageItemChanged(image_item)
-        self.opaque_slider.valueChanged.disconnect(self.onSliderChanged)
-        self.opaque_slider.setValue(60)
-        self.opaque_slider.valueChanged.connect(self.onSliderChanged)
-
-        self.opaque_check.stateChanged.disconnect(self.onCheckChanged)
-        self.opaque_check.setCheckState(Qt.Unchecked)
-        self.opaque_check.stateChanged.connect(self.onCheckChanged)
-
-        self.masknoteitem.resetNote()
-        self.maskcomboitem.resetIndex()
 
     def parseConfiguration(self, label_class, label_config):
         attrs = label_config['attributes']
@@ -530,25 +495,5 @@ class PropertyEditor(QWidget):
         self._layout.addWidget(self._classbox, 0)
         self._layout.addStretch(1)
 
-        self._opaquebox = QGroupBox("Item Transparency", self)
-        self._opaquebox.setLayout(self.hlayout)
-        self._layout.addWidget(self._opaquebox, 1)
+        self._layout.addWidget(self._imagebox, 1)
         self._layout.addStretch(1)
-
-        self._layout.addWidget(self._imagebox, 2)
-        self._layout.addStretch(1)
-
-        self._itembox = QGroupBox("Item", self)
-        self._itembox_layout = QFormLayout(self)
-        self._itembox.setLayout(self._itembox_layout)
-        self._itembox_layout.addRow(self.masknoteitem)
-        self._itembox_layout.addRow(self.maskcomboitem)
-        self._layout.addWidget(self._itembox)
-
-
-    def onItemChanged(self, item):
-        self.masknoteitem.onItemChanged(item)
-        self.maskcomboitem.onItemChanged(item)
-
-    def onItemDisSelected(self):
-        self.onItemChanged(None)

@@ -12,6 +12,7 @@ from sloth.gui.propertyeditor import PropertyEditor
 from sloth.gui.annotationscene import AnnotationScene
 from sloth.gui.frameviewer import GraphicsView
 from sloth.gui.controlbuttons import ControlButtonWidget
+from sloth.gui.itemeditor import ItemEditor
 from sloth.conf import config
 from sloth.core.utils import import_callable
 from sloth.annotations.model import AnnotationTreeView, FrameModelItem, ImageFileModelItem, CopyAnnotations, InterpolateRange
@@ -126,6 +127,7 @@ class MainWindow(QMainWindow):
         new_image = self.labeltool.currentImage()
         self.scene.setCurrentImage(new_image)
 
+        self.itemEditor.onImageItemChanged(new_image)
         self.property_editor.onImageItemChanged(new_image)
         self.onFitToWindowModeChanged()
         self.treeview.scrollTo(new_image.index())
@@ -247,13 +249,16 @@ class MainWindow(QMainWindow):
         self.property_editor = PropertyEditor(config)
         self.ui.dockProperties.setWidget(self.property_editor)
 
+        self.itemEditor = ItemEditor()
+        self.ui.dockLabelProperties.setWidget(self.itemEditor)
+
         # Scene
         self.scene = AnnotationScene(self.labeltool, items=items, inserters=inserters)
         self.property_editor.insertionModeStarted.connect(self.scene.onInsertionModeStarted)
         self.property_editor.insertionModeEnded.connect(self.scene.onInsertionModeEnded)
 
-        self.property_editor.sliderChanged.connect(self.scene.onSliderChanged)
-        self.property_editor.checkChanged.connect(self.scene.onCheckChanged)
+        self.itemEditor.sliderChanged.connect(self.scene.onSliderChanged)
+        self.itemEditor.checkChanged.connect(self.scene.onCheckChanged)
 
         # SceneView
         self.view = GraphicsView(self)
@@ -283,8 +288,8 @@ class MainWindow(QMainWindow):
         self.scene.selectionChanged.connect(self.scene.onSelectionChanged)
         self.treeview.selectedItemsChanged.connect(self.scene.onSelectionChangedInTreeView)
 
-        self.scene.itemChanged.connect(self.property_editor.onItemChanged)
-        self.scene.itemDisSelected.connect(self.property_editor.onItemDisSelected)
+        self.scene.itemChanged.connect(self.itemEditor.onItemChanged)
+        self.scene.itemDisSelected.connect(self.itemEditor.onItemDisSelected)
 
         self.posinfo = QLabel("-1, -1")
         self.posinfo.setFrameStyle(QFrame.StyledPanel)
