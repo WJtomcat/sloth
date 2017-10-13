@@ -802,6 +802,28 @@ class PolygonItem(BaseItem):
             self.setValid(False)
             return QPolygonF()
 
+    def dataTo(self, name):
+        if self._model_item is None:
+            return ''
+        try:
+            note = self._model_item[name]
+            return note
+        except KeyError as e:
+            LOG.debug("PolygonItem: Could not find expected key in item: "
+                      + str(e) + ". Check your config!")
+            return ''
+
+    def dataToIndex(self):
+        if self._model_item is None:
+            return 0
+        try:
+            index = self._model_item['combo']
+            return index
+        except KeyError as e:
+            LOG.debug("PolygonItem: Could not find expected key in item: "
+                      + str(e) + ". Check your config!")
+            return 0
+
     def _updatePolygon(self, polygon):
         if polygon == self._polygon:
             return
@@ -823,6 +845,11 @@ class PolygonItem(BaseItem):
         self._model_item.update({
             self.prefix() + 'xn': strx,
             self.prefix() + 'yn': stry
+        })
+
+    def updateTo(self, key, data):
+        self._model_item.update({
+            self.prefix() + key: data
         })
 
     def boundingRect(self):
