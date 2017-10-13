@@ -358,7 +358,6 @@ class PropertyEditor(QWidget):
             item.onImageItemChanged(image_item)
         for item in self._check_items:
             item.onImageItemChanged(image_item)
-        print('onImageChanged')
 
     def addLabelClass(self, label_config):
         # Check label configuration

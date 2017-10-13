@@ -12,7 +12,6 @@ class NoteItem(QTextEdit):
         self.textChanged.connect(self.inputupdate)
 
     def loadNote(self, image_item):
-        print('loadNote')
         self.hasitemflag = False
         self.image_item = image_item
         if image_item is None:
@@ -101,7 +100,9 @@ class MaskNoteItem(QTextEdit):
             self.resetNote()
             return
         else:
+            self.textChanged.disconnect(self.inputupdate)
             self.setText(note)
+            self.textChanged.connect(self.inputupdate)
 
     def inputupdate(self):
         if self._item is None:

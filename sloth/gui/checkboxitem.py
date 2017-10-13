@@ -104,7 +104,7 @@ class MaskCheckBoxItem(QGroupBox):
         else:
             ann = {}
             for text, item in self.checkitems.items():
-                ann.update({text: item.checkState})
+                ann.update({text: item.checkState()})
             self._item.updateTo(self.labelclass, ann)
 
     def resetCheck(self):
@@ -115,7 +115,7 @@ class MaskCheckBoxItem(QGroupBox):
 
     def loadCheck(self):
         if self._item is None:
-            self.resetIndex()
+            self.resetCheck()
             return
         if not self._item.isSelected():
             self.resetCheck()
@@ -131,3 +131,7 @@ class MaskCheckBoxItem(QGroupBox):
                 tmp = check[text]
                 item.setCheckState(tmp)
                 item.stateChanged.connect(self.changeCheck)
+
+    def onItemChanged(self, item):
+        self._item = item
+        self.loadCheck()
