@@ -107,6 +107,8 @@ LABELS = (
     },
 )
 
+NOTES = ['Note']
+
 COMBOCLASS= (
     {
         'text':     'Zoom Level',
@@ -114,6 +116,41 @@ COMBOCLASS= (
     },
     {
         'text':     'Stage',
+        'items':     ['default', 'pre-lodine', 'post-lodine', 'pre acetowhite', 'post acetowhite'],
+    }
+)
+
+CHECKBOX= (
+    {
+        'text':     'Zoom Level2',
+        'items':     ['default', 'x1', 'x10', 'x15'],
+    },
+    {
+        'text':     'Stage2',
+        'items':     ['default', 'pre-lodine', 'post-lodine', 'pre acetowhite', 'post acetowhite'],
+    }
+)
+
+ITEMNOTES = ['Note']
+
+ITEMCOMBOCLASS= (
+    {
+        'text':     'Zoom Level',
+        'items':     ['default', 'x1', 'x10', 'x15'],
+    },
+    {
+        'text':     'Stage',
+        'items':     ['default', 'pre-lodine', 'post-lodine', 'pre acetowhite', 'post acetowhite'],
+    }
+)
+
+ITEMCHECKBOX= (
+    {
+        'text':     'Zoom Level2',
+        'items':     ['default', 'x1', 'x10', 'x15'],
+    },
+    {
+        'text':     'Stage2',
         'items':     ['default', 'pre-lodine', 'post-lodine', 'pre acetowhite', 'post acetowhite'],
     }
 )

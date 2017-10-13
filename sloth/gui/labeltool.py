@@ -249,7 +249,7 @@ class MainWindow(QMainWindow):
         self.property_editor = PropertyEditor(config)
         self.ui.dockProperties.setWidget(self.property_editor)
 
-        self.itemEditor = ItemEditor()
+        self.itemEditor = ItemEditor(config)
         self.ui.dockLabelProperties.setWidget(self.itemEditor)
 
         # Scene

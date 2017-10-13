@@ -9,6 +9,7 @@ from sloth.gui.utils import MyVBoxLayout
 from sloth.utils.bind import bind
 from sloth.gui.noteitem import NoteItem, MaskNoteItem
 from sloth.gui.comboitem import ComboItem, MaskComboItem
+from sloth.gui.checkboxitem import CheckBoxItem
 
 
 LOG = logging.getLogger(__name__)
@@ -312,17 +313,24 @@ class PropertyEditor(QWidget):
         self._attribute_handlers = {}
         self._handler_factory    = AttributeHandlerFactory()
 
-        self._noteitem = NoteItem()
-
+        self._note_items = []
         self._combo_items = []
+        self._check_items = []
         self._setupGUI()
 
         # Add label classes from config
+
+        for label in config.NOTES:
+            self.addNoteItem(label)
+
         for label in config.LABELS:
             self.addLabelClass(label)
 
         for label in config.COMBOCLASS:
             self.addComboClass(label)
+
+        for label in config.CHECKBOX:
+            self.addCheckBoxItem(label)
 
     def onModelChanged(self, new_model):
         attrs = set([k for k, v in self._attribute_handlers.items() if v.autoAddEnabled()])
@@ -344,8 +352,11 @@ class PropertyEditor(QWidget):
                     h.addValue(val, True)
 
     def onImageItemChanged(self, image_item):
-        self._noteitem.loadNote(image_item)
+        for item in self._note_items:
+            item.onImageItemChanged(image_item)
         for item in self._combo_items:
+            item.onImageItemChanged(image_item)
+        for item in self._check_items:
             item.onImageItemChanged(image_item)
         print('onImageChanged')
 
@@ -381,6 +392,15 @@ class PropertyEditor(QWidget):
             hotkey.activated.connect(button.click)
             self._class_shortcuts[label_class] = hotkey
 
+    def addNoteItem(self, label_config):
+        noteItem = NoteItem(label_config)
+        self._note_items.append(noteItem)
+        box = QGroupBox(label_config, self)
+        layout = FloatingLayout()
+        box.setLayout(layout)
+        layout.addWidget(noteItem)
+        self._layout.addWidget(box)
+
     def addComboClass(self, label_config):
         if 'text' not in label_config:
             raise ImproperlyConfigured("Combobox with no text found")
@@ -391,7 +411,22 @@ class PropertyEditor(QWidget):
 
         combobox = ComboItem(label_config)
         self._combo_items.append(combobox)
-        self._imagebox_layout.addRow(attrs, combobox)
+        box = QGroupBox(attrs, self)
+        layout = FloatingLayout()
+        box.setLayout(layout)
+        layout.addWidget(combobox)
+        self._layout.addWidget(box)
+
+    def addCheckBoxItem(self, label_config):
+        if 'text' not in label_config:
+            raise ImproperlyConfigured("CheckBoxItem with no text found")
+        attrs = label_config['text']
+        if 'items' not in label_config:
+            raise ImproperlyConfigured("CheckBoxItem with no items found")
+        items = label_config['items']
+        checkBox = CheckBoxItem(label_config, attrs)
+        self._check_items.append(checkBox)
+        self._layout.addWidget(checkBox)
 
     def parseConfiguration(self, label_class, label_config):
         attrs = label_config['attributes']
@@ -484,16 +519,8 @@ class PropertyEditor(QWidget):
         self._classbox_layout = FloatingLayout()
         self._classbox.setLayout(self._classbox_layout)
 
-        self._imagebox = QGroupBox("Image", self)
-        self._imagebox_layout = QFormLayout(self)
-        self._imagebox.setLayout(self._imagebox_layout)
-        self._imagebox_layout.addRow(self._noteitem)
-
         # Global widget
         self._layout = MyVBoxLayout()
         self.setLayout(self._layout)
         self._layout.addWidget(self._classbox, 0)
-        self._layout.addStretch(1)
-
-        self._layout.addWidget(self._imagebox, 1)
         self._layout.addStretch(1)

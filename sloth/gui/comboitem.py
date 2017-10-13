@@ -23,10 +23,11 @@ class ComboItem(QComboBox):
         self.hasitemflag = False
         self.image_item = image_item
         if image_item is None:
+            self.resetClasses()
             return
 
-        lenth = len(image_item.children())
-        for row in range(0, lenth):
+        length = len(image_item.children())
+        for row in range(0, length):
             child = image_item.childAt(row)
             if not isinstance(child, AnnotationModelItem):
                 continue
@@ -74,15 +75,14 @@ class ComboItem(QComboBox):
 
 
 class MaskComboItem(QComboBox):
-    def __init__(self, parent=None):
+    def __init__(self, config, parent=None):
         QComboBox.__init__(self, parent)
+        self.labelclass = config['text']
         self._item = None
+        self.items = config['items']
+        for i in self.items:
+            self.addItem(i)
         self.currentIndexChanged.connect(self.indexUpdate)
-        self.addItem('default')
-        self.addItem('A')
-        self.addItem('B')
-        self.addItem('C')
-        self.addItem('D')
 
     def onItemChanged(self, item):
         self._item = item
@@ -96,16 +96,20 @@ class MaskComboItem(QComboBox):
             self.resetIndex()
             self._item = None
             return
-        index = self._item.dataToIndex()
-        self.currentIndexChanged.disconnect(self.indexUpdate)
-        self.setCurrentIndex(index)
-        self.currentIndexChanged.connect(self.indexUpdate)
+        index = self._item.dataTo(self.labelclass)
+        if index == '':
+            self.resetIndex()
+            return
+        else:
+            self.currentIndexChanged.disconnect(self.indexUpdate)
+            self.setCurrentIndex(index)
+            self.currentIndexChanged.connect(self.indexUpdate)
 
     def indexUpdate(self):
         if self._item is None:
             return
         index = self.currentIndex()
-        self._item.updateModel(index=index)
+        self._item.updateTo(self.labelclass, index)
 
     def resetIndex(self):
         self.currentIndexChanged.disconnect(self.indexUpdate)
