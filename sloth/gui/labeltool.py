@@ -19,6 +19,7 @@ from sloth.annotations.model import AnnotationTreeView, FrameModelItem, ImageFil
 from sloth import APP_NAME, ORGANIZATION_DOMAIN
 from sloth.utils.bind import bind, compose_noargs
 import hashlib
+import dicom
 
 GUIDIR=os.path.join(os.path.dirname(__file__))
 
@@ -454,7 +455,7 @@ class MainWindow(QMainWindow):
         if (filename is not None) and (len(filename) > 0):
             path = QFileInfo(filename).path()
 
-        image_types = [ '*.jpg', '*.bmp', '*.png', '*.pgm', '*.ppm', '*.tiff', '*.tif', '*.gif']
+        image_types = [ '*.jpg', '*.bmp', '*.png', '*.pgm', '*.ppm', '*.tiff', '*.tif', '*.gif', 'dcm']
 
         dialog = QFileDialog(self)
         dialog.setFileMode(QFileDialog.DirectoryOnly)
@@ -477,6 +478,14 @@ class MainWindow(QMainWindow):
                     if flag:
                         self.labeltool.setCurrentImage(item)
                         flag = False
+
+    def readDcm(self, fname):
+        md5 = self.getMd5(fname)
+        dcm = dicom.read_file(fname)
+        pixel_array = dcm.pixel_array
+        depth = pixel_array[0]
+        item = self.labeltool.addDicomFile(fname, md5, depth)
+
 
     def onViewsLockedChanged(self, checked):
         features = QDockWidget.AllDockWidgetFeatures

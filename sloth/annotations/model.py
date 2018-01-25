@@ -429,6 +429,32 @@ class FileModelItem(KeyValueModelItem):
             return ImageFileModelItem(fileinfo)
         elif fileinfo['class'] == 'video':
             return VideoFileModelItem(fileinfo)
+        elif fileinfo['class'] == 'dicom':
+            return DicomFileModelItem(fileinfo)
+
+class DicomFileModelItem(FileModelItem):
+    def __init__(self, fileinfo):
+        self._images = fileinfo.get("images", [])
+        if "images" in fileinfo:
+            del fileinfo['images']
+        FileModelItem.__init__(self, fileinfo)
+        self._toload = []
+        for image in self._images:
+            self._children.append(image)
+            self._toload.append(image)
+        self._loaded = False
+
+    def _load(self, index):
+        self._toload.remove(self._children[index])
+        image = ImageFileModelItem(self._children[index])
+        self.replaceChild(index, image)
+        if len(self._toload) == 0:
+            self._loaded = True
+
+    def data(self, role=Qt.DisplayRole, column=0):
+        if role == DataRole:
+            return self._dict
+        return FileModelItem.data(self, role, column)
 
 
 class ImageModelItem(ModelItem):
@@ -481,6 +507,10 @@ class ImageFileModelItem(FileModelItem, ImageModelItem):
         fi['annotations'] = [child.getAnnotations() for child in self.children()
                              if hasattr(child, 'getAnnotations')]
         return fi
+
+class DicomImageModelItem(ImageFileModelItem):
+    def __init__(self, imageinfo):
+        ImageFileModelItem.__init__(self, imageinfo)
 
 
 class VideoFileModelItem(FileModelItem):

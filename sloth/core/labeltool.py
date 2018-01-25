@@ -357,6 +357,17 @@ class LabelTool(QObject):
         }
         return self._model._root.appendFileItem(fileitem)
 
+    def addDicomFile(self, fname, md5, depth):
+        fileitem = {
+            'filename': fname,
+            'class': 'dicom',
+            'md5': md5,
+            'depth': depth,
+            'images': [],
+            'time': []
+        }
+        return self._model._root.appendFileItem(fileitem)
+
     def addVideoFile(self, fname):
         fileitem = {
             'filename': fname,

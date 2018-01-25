@@ -1,12 +1,13 @@
 """This is the AnnotationScene module"""
 from sloth.items import *
 from sloth.core.exceptions import InvalidArgumentException
-from sloth.annotations.model import AnnotationModelItem
+from sloth.annotations.model import AnnotationModelItem, ImageFileModelItem, DicomImageModelItem
 from sloth.utils import toQImage
 from sloth.conf import config
 import logging
 import functools
 import time
+
 LOG = logging.getLogger(__name__)
 
 
@@ -101,15 +102,17 @@ class AnnotationScene(QGraphicsScene):
             self._opaque = 0.6
             current_image._seen = True
             assert self._image_item.model() == self._model
-            self._image      = self._labeltool.getImage(self._image_item)
-            self._pixmap     = QPixmap(toQImage(self._image))
-            self._scene_item = QGraphicsPixmapItem(self._pixmap)
-            self._scene_item.setZValue(-1)
-            self.setSceneRect(0, 0, self._pixmap.width(), self._pixmap.height())
-            self.addItem(self._scene_item)
-
-            self.insertItems(0, len(self._image_item.children())-1)
-            self.update()
+            if isinstance(self._image_item, DicomImageModelItem):
+                return
+            elif isinstance(self._image_item, ImageFileModelItem):
+                self._image      = self._labeltool.getImage(self._image_item)
+                self._pixmap     = QPixmap(toQImage(self._image))
+                self._scene_item = QGraphicsPixmapItem(self._pixmap)
+                self._scene_item.setZValue(-1)
+                self.setSceneRect(0, 0, self._pixmap.width(), self._pixmap.height())
+                self.addItem(self._scene_item)
+                self.insertItems(0, len(self._image_item.children())-1)
+                self.update()
 
     def insertItems(self, first, last):
         if self._image_item is None:

@@ -8,6 +8,8 @@ from sloth.core.utils import import_callable
 import logging
 LOG = logging.getLogger(__name__)
 
+import dicom
+
 try:
     import cPickle as pickle
 except ImportError:
@@ -160,6 +162,15 @@ class AnnotationContainer:
             return np.asarray(im)
         else:
             return okapy.loadImage(fullpath)
+
+    def loadDicomImage(self, filename, depth):
+        fullpath = self._fullpath(filename)
+        if not os.path.exists(fullpath):
+            LOG.warn("Image file %s does not exist." % fullpath)
+            return None
+        dcm = dicom.read_file(filename, force=True)
+        return dcm.pixel_array[depth,:,:]
+
 
     def loadFrame(self, filename, frame_number):
         """
