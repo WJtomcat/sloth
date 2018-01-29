@@ -329,6 +329,8 @@ class LabelTool(QObject):
             image = self._model.itemFromIndex(image)
         if isinstance(image, RootModelItem):
             return
+        if isinstance(image, DicomFileModelItem):
+            return
         while (image is not None) and (not isinstance(image, ImageModelItem)):
             image = image.parent()
         if image is None:
@@ -343,6 +345,9 @@ class LabelTool(QObject):
             return self._container.loadFrame(video['filename'], item['num'])
         else:
             return self._container.loadImage(item['filename'])
+
+    def getDcmImage(self, item):
+        return self._container.loadDicomImage(item['filename'], item['depth'])
 
     def getAnnotationFilePatterns(self):
         return self._container_factory.patterns()
@@ -363,8 +368,9 @@ class LabelTool(QObject):
             'class': 'dicom',
             'md5': md5,
             'depth': depth,
+            'annotations': [],
             'images': [],
-            'time': []
+            'time': [],
         }
         return self._model._root.appendFileItem(fileitem)
 

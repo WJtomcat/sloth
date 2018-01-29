@@ -15,7 +15,8 @@ from sloth.gui.controlbuttons import ControlButtonWidget
 from sloth.gui.itemeditor import ItemEditor
 from sloth.conf import config
 from sloth.core.utils import import_callable
-from sloth.annotations.model import AnnotationTreeView, FrameModelItem, ImageFileModelItem, CopyAnnotations, InterpolateRange
+from sloth.annotations.model import AnnotationTreeView, FrameModelItem, ImageFileModelItem, CopyAnnotations, InterpolateRange, \
+    DicomImageModelItem
 from sloth import APP_NAME, ORGANIZATION_DOMAIN
 from sloth.utils.bind import bind, compose_noargs
 import hashlib
@@ -74,7 +75,7 @@ class MainWindow(QMainWindow):
 
         self.labeltool = labeltool
         self.setupGui()
-        self.loadApplicationSettings()
+        # self.loadApplicationSettings()
         self.onAnnotationsLoaded()
 
     # Slots
@@ -133,7 +134,10 @@ class MainWindow(QMainWindow):
         self.onFitToWindowModeChanged()
         self.treeview.scrollTo(new_image.index())
 
-        img = self.labeltool.getImage(new_image)
+        if isinstance(new_image, DicomImageModelItem):
+            img = self.labeltool.getDcmImage(new_image)
+        else:
+            img = self.labeltool.getImage(new_image)
 
         if img is None:
             self.controls.setFilename("")
@@ -312,6 +316,7 @@ class MainWindow(QMainWindow):
         # View menu
         self.ui.menu_Views.addAction(self.ui.dockProperties.toggleViewAction())
         self.ui.menu_Views.addAction(self.ui.dockAnnotations.toggleViewAction())
+        self.ui.menu_Views.addAction(self.ui.dockLabelProperties.toggleViewAction())
 
         # Annotation menu
         self.copyAnnotations = CopyAnnotations(self.labeltool)
@@ -455,7 +460,7 @@ class MainWindow(QMainWindow):
         if (filename is not None) and (len(filename) > 0):
             path = QFileInfo(filename).path()
 
-        image_types = [ '*.jpg', '*.bmp', '*.png', '*.pgm', '*.ppm', '*.tiff', '*.tif', '*.gif', 'dcm']
+        image_types = [ '*.jpg', '*.bmp', '*.png', '*.pgm', '*.ppm', '*.tiff', '*.tif', '*.gif']
 
         dialog = QFileDialog(self)
         dialog.setFileMode(QFileDialog.DirectoryOnly)
@@ -479,11 +484,15 @@ class MainWindow(QMainWindow):
                         self.labeltool.setCurrentImage(item)
                         flag = False
 
+            if fnmatch.fnmatch(fname.lower(), '*.dcm'):
+                self.readDcm(fname)
+
     def readDcm(self, fname):
         md5 = self.getMd5(fname)
-        dcm = dicom.read_file(fname)
-        pixel_array = dcm.pixel_array
-        depth = pixel_array[0]
+        dcm = dicom.read_file(fname, force=True)
+        depth = dcm.pixel_array.shape[0]
+        print(dcm.pixel_array.shape)
+        print(depth)
         item = self.labeltool.addDicomFile(fname, md5, depth)
 
 

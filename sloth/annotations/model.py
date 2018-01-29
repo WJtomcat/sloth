@@ -434,19 +434,33 @@ class FileModelItem(KeyValueModelItem):
 
 class DicomFileModelItem(FileModelItem):
     def __init__(self, fileinfo):
-        self._images = fileinfo.get("images", [])
-        if "images" in fileinfo:
-            del fileinfo['images']
+        self._images = fileinfo.get("annotations", [])
+        if "annotations" in fileinfo:
+            del fileinfo['annotations']
         FileModelItem.__init__(self, fileinfo)
         self._toload = []
-        for image in self._images:
-            self._children.append(image)
-            self._toload.append(image)
-        self._loaded = False
+        if len(self._images) == 0:
+            for i in range(fileinfo['depth']):
+                dcmImgInfo = {
+                    'filename': fileinfo['filename'],
+                    'class': 'dcmImage',
+                    'annotations': [],
+                    'depth': i,
+                    'time': [],
+                    'images':[]
+                }
+                self._children.append(dcmImgInfo)
+                self._toload.append(dcmImgInfo)
+            self._loaded = False
+        else:
+            for image in self._images:
+                self._children.append(image)
+                self._toload.append(image)
+            self._loaded = False
 
     def _load(self, index):
         self._toload.remove(self._children[index])
-        image = ImageFileModelItem(self._children[index])
+        image = DicomImageModelItem(self._children[index])
         self.replaceChild(index, image)
         if len(self._toload) == 0:
             self._loaded = True
@@ -455,6 +469,14 @@ class DicomFileModelItem(FileModelItem):
         if role == DataRole:
             return self._dict
         return FileModelItem.data(self, role, column)
+
+    def getAnnotations(self):
+        self._ensureAllLoaded()
+        fi = KeyValueModelItem.getAnnotations(self)
+        fi['annotations'] = [child.getAnnotations() for child in self.children()
+                             if hasattr(child, 'getAnnotations')]
+        print(fi)
+        return fi
 
 
 class ImageModelItem(ModelItem):
@@ -476,6 +498,8 @@ class ImageModelItem(ModelItem):
             ann.setUnconfirmed(False)
 
 
+
+
 class ImageFileModelItem(FileModelItem, ImageModelItem):
     def __init__(self, fileinfo):
         self._annotation_data = fileinfo.get("annotations", [])
@@ -487,7 +511,7 @@ class ImageFileModelItem(FileModelItem, ImageModelItem):
         for ann in self._annotation_data:
             self._children.append(ann)
             self._toload.append(ann)
-        self._loaded = False        
+        self._loaded = False
 
     def _load(self, index):
         self._toload.remove(self._children[index])
@@ -511,6 +535,15 @@ class ImageFileModelItem(FileModelItem, ImageModelItem):
 class DicomImageModelItem(ImageFileModelItem):
     def __init__(self, imageinfo):
         ImageFileModelItem.__init__(self, imageinfo)
+        self._ensureAllLoaded()
+
+    def getAnnotations(self):
+        self._ensureAllLoaded()
+        fi = KeyValueModelItem.getAnnotations(self)
+        fi['annotations'] = [child.getAnnotations() for child in self.children()
+                             if hasattr(child, 'getAnnotations')]
+        return fi
+
 
 
 class VideoFileModelItem(FileModelItem):
@@ -947,7 +980,7 @@ class InterpolateRange(QObject):
         QObject.__init__(self)
 
         self._lt = labeltool
-        self._overwrite_funcs = [self.defaultOverwriteCheck] 
+        self._overwrite_funcs = [self.defaultOverwriteCheck]
         self._interp_func = self.interpolate
 
         self._wnd = labeltool.mainWindow()
@@ -1078,6 +1111,3 @@ class InterpolateRange(QObject):
                 toInterp[i].addAnnotation(ann)
 
         return True
-
-
-

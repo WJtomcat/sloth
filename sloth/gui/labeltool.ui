@@ -14,7 +14,7 @@
    <string>sloth</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="icons.qrc">
+   <iconset>
     <normaloff>:/icons/sloth.svg</normaloff>:/icons/sloth.svg</iconset>
   </property>
   <widget class="QWidget" name="centralWidget"/>
@@ -140,13 +140,22 @@
     <string>LabelProperties</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>2</number>
+    <number>8</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2"/>
   </widget>
+  <widget class="QDockWidget" name="dockImageInfo">
+   <property name="windowTitle">
+    <string>Image Info</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3"/>
+  </widget>
   <action name="actionOpen">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/folder_table.png</normaloff>:/icons/folder_table.png</iconset>
    </property>
    <property name="text">
@@ -161,7 +170,7 @@
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/page_white_text.png</normaloff>:/icons/page_white_text.png</iconset>
    </property>
    <property name="text">
@@ -173,7 +182,7 @@
   </action>
   <action name="actionSave">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/disk.png</normaloff>:/icons/disk.png</iconset>
    </property>
    <property name="text">
@@ -185,7 +194,7 @@
   </action>
   <action name="actionExit">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/door_in.png</normaloff>:/icons/door_in.png</iconset>
    </property>
    <property name="text">
@@ -197,7 +206,7 @@
   </action>
   <action name="action_Add_ImageDir">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/picture_add.png</normaloff>:/icons/picture_add.png</iconset>
    </property>
    <property name="text">
@@ -209,7 +218,7 @@
   </action>
   <action name="actionNext">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/arrow_right.png</normaloff>:/icons/arrow_right.png</iconset>
    </property>
    <property name="text">
@@ -218,7 +227,7 @@
   </action>
   <action name="actionPrevious">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/arrow_left.png</normaloff>:/icons/arrow_left.png</iconset>
    </property>
    <property name="text">
@@ -227,7 +236,7 @@
   </action>
   <action name="actionZoom_In">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/zoom_in.png</normaloff>:/icons/zoom_in.png</iconset>
    </property>
    <property name="text">
@@ -236,7 +245,7 @@
   </action>
   <action name="actionZoom_Out">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/zoom_out.png</normaloff>:/icons/zoom_out.png</iconset>
    </property>
    <property name="text">
@@ -278,7 +287,7 @@
   </action>
   <action name="actionSave_As">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/disk_multiple.png</normaloff>:/icons/disk_multiple.png</iconset>
    </property>
    <property name="text">
@@ -310,8 +319,6 @@
    </property>
   </action>
  </widget>
- <resources>
-  <include location="icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

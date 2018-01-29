@@ -7,7 +7,7 @@ from sloth.annotations.model import AnnotationModelItem
 from sloth.gui.floatinglayout import FloatingLayout
 from sloth.gui.utils import MyVBoxLayout
 from sloth.utils.bind import bind
-from sloth.gui.noteitem import NoteItem, MaskNoteItem
+from sloth.gui.noteitem import *
 from sloth.gui.comboitem import ComboItem, MaskComboItem
 from sloth.gui.checkboxitem import CheckBoxItem
 
@@ -316,6 +316,7 @@ class PropertyEditor(QWidget):
         self._note_items = []
         self._combo_items = []
         self._check_items = []
+        self._line_items = []
         self._setupGUI()
 
         # Add label classes from config
@@ -329,8 +330,13 @@ class PropertyEditor(QWidget):
         for label in config.COMBOCLASS:
             self.addComboClass(label)
 
+        for label in config.INPUTLINE:
+            self.addInputLine(label)
+
         for label in config.CHECKBOX:
             self.addCheckBoxItem(label)
+
+        self._layout.addStretch(2)
 
     def onModelChanged(self, new_model):
         attrs = set([k for k, v in self._attribute_handlers.items() if v.autoAddEnabled()])
@@ -400,9 +406,16 @@ class PropertyEditor(QWidget):
         layout.addWidget(noteItem)
         self._layout.addWidget(box)
 
+    def addInputLine(self, label_config):
+        lineItem = LineEditItem(label_config)
+        self._line_items.append(lineItem)
+        self.lineLayout.addRow(label_config, lineItem)
+
+
     def addComboClass(self, label_config):
         if 'text' not in label_config:
             raise ImproperlyConfigured("Combobox with no text found")
+        print(label_config)
         attrs = label_config['text']
         if 'items' not in label_config:
             raise ImproperlyConfigured("Combobox with no items found")
@@ -515,11 +528,15 @@ class PropertyEditor(QWidget):
 
         # Label class buttons
         self._classbox = QGroupBox("Labels", self)
-        self._classbox_layout = FloatingLayout()
+        self._classbox_layout = QVBoxLayout()
         self._classbox.setLayout(self._classbox_layout)
 
         # Global widget
         self._layout = MyVBoxLayout()
         self.setLayout(self._layout)
         self._layout.addWidget(self._classbox, 0)
+        self._layout.addStretch(1)
+
+        self.lineLayout = QFormLayout()
+        self._layout.addLayout(self.lineLayout)
         self._layout.addStretch(1)

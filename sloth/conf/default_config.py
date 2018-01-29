@@ -36,66 +36,39 @@
 LABELS = (
     {
         'attributes': {
-            'class':    'TZ',
-        },
-        'inserter': 'sloth.items.FreehandItemInserter',
-        'item':     'sloth.items.PolygonItem',
-        'hotkey':   't',
-        'text':     'TZ(t)',
-    },
-    {
-        'attributes': {
-            'class':    'SCJ',
-        },
-        'inserter': 'sloth.items.FreehandItemInserter',
-        'item':     'sloth.items.PolygonItem',
-        'hotkey':   's',
-        'text':     'SCJ(s)',
-    },
-    {
-        'attributes': {
-            'class':    'CIS',
-        },
-        'inserter': 'sloth.items.FreehandItemInserter',
-        'item':     'sloth.items.PolygonItem',
-        'hotkey':   'c',
-        'text':     'CIS(c)',
-    },
-    {
-        'attributes': {
-            'class':    'CIGN',
-        },
-        'inserter': 'sloth.items.FreehandItemInserter',
-        'item':     'sloth.items.PolygonItem',
-        'hotkey':   'g',
-        'text':     'CIGN(g)',
-    },
-    {
-        'attributes': {
-            'class':    'PUN',
-        },
-        'inserter': 'sloth.items.FreehandItemInserter',
-        'item':     'sloth.items.PolygonItem',
-        'hotkey':   'p',
-        'text':     'PUN(p)',
-    },
-    {
-        'attributes': {
-            'class':    'MOS',
-        },
-        'inserter': 'sloth.items.FreehandItemInserter',
-        'item':     'sloth.items.PolygonItem',
-        'hotkey':   'm',
-        'text':     'MOS(m)',
-    },
-    {
-        'attributes': {
-            'class':    'AE',
+            'class':    'AC',
         },
         'inserter': 'sloth.items.FreehandItemInserter',
         'item':     'sloth.items.PolygonItem',
         'hotkey':   'a',
-        'text':     'AE(a)',
+        'text':     'Advanced Cancer',
+    },
+    {
+        'attributes': {
+            'class':    'SN',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   's',
+        'text':     'Superficial Neoplasia',
+    },
+    {
+        'attributes': {
+            'class':    'ST',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   't',
+        'text':     'Submucosal Tumor',
+    },
+    {
+        'attributes': {
+            'class':    'Misc',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'm',
+        'text':     'Misc',
     },
     {
         'attributes': {
@@ -107,52 +80,26 @@ LABELS = (
     },
 )
 
-NOTES = ['Note']
+NOTES = []
+
+INPUTLINE = ['Invasion Depth', 'size.W', 'size.H', 'size.D']
 
 COMBOCLASS= (
-    {
-        'text':     'Zoom Level',
-        'items':     ['default', 'x1', 'x10', 'x15'],
-    },
-    {
-        'text':     'Stage',
-        'items':     ['default', 'pre-lodine', 'post-lodine', 'pre acetowhite', 'post acetowhite'],
-    }
 )
 
-CHECKBOX= (
-    {
-        'text':     'Zoom Level2',
-        'items':     ['default', 'x1', 'x10', 'x15'],
-    },
-    {
-        'text':     'Stage2',
-        'items':     ['default', 'pre-lodine', 'post-lodine', 'pre acetowhite', 'post acetowhite'],
-    }
-)
+CHECKBOX = []
 
-ITEMNOTES = ['Note']
+
+ITEMNOTES = []
 
 ITEMCOMBOCLASS= (
     {
-        'text':     'Zoom Level',
-        'items':     ['default', 'x1', 'x10', 'x15'],
+        'text':     'Pathology info',
+        'items':     ['default', 'Negative for IEN', 'Low-grade IEN', 'High-grade neoplasia', 'Submucosal carcinoma'],
     },
-    {
-        'text':     'Stage',
-        'items':     ['default', 'pre-lodine', 'post-lodine', 'pre acetowhite', 'post acetowhite'],
-    }
 )
 
 ITEMCHECKBOX= (
-    {
-        'text':     'Zoom Level2',
-        'items':     ['default', 'x1', 'x10', 'x15'],
-    },
-    {
-        'text':     'Stage2',
-        'items':     ['default', 'pre-lodine', 'post-lodine', 'pre acetowhite', 'post acetowhite'],
-    }
 )
 
 def color_map(N=256):
@@ -170,7 +117,7 @@ def color_map(N=256):
         cmap.append([r, g, b])
     return cmap
 
-classes = ['Eraser', 'TZ', 'SCJ', 'CIS', 'CIGN', 'PUN', 'MOS', 'AE']
+classes = ['Eraser', 'AC', 'SN', 'ST', 'Misc']
 
 def getcolormap():
     cmap = color_map()

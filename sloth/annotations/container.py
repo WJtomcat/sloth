@@ -168,7 +168,9 @@ class AnnotationContainer:
         if not os.path.exists(fullpath):
             LOG.warn("Image file %s does not exist." % fullpath)
             return None
-        dcm = dicom.read_file(filename, force=True)
+        print(fullpath)
+        print(depth)
+        dcm = dicom.read_file(fullpath, force=True)
         return dcm.pixel_array[depth,:,:]
 
 

@@ -103,16 +103,16 @@ class AnnotationScene(QGraphicsScene):
             current_image._seen = True
             assert self._image_item.model() == self._model
             if isinstance(self._image_item, DicomImageModelItem):
-                return
+                self._image =self._labeltool.getDcmImage(self._image_item)
             elif isinstance(self._image_item, ImageFileModelItem):
                 self._image      = self._labeltool.getImage(self._image_item)
-                self._pixmap     = QPixmap(toQImage(self._image))
-                self._scene_item = QGraphicsPixmapItem(self._pixmap)
-                self._scene_item.setZValue(-1)
-                self.setSceneRect(0, 0, self._pixmap.width(), self._pixmap.height())
-                self.addItem(self._scene_item)
-                self.insertItems(0, len(self._image_item.children())-1)
-                self.update()
+            self._pixmap     = QPixmap(toQImage(self._image))
+            self._scene_item = QGraphicsPixmapItem(self._pixmap)
+            self._scene_item.setZValue(-1)
+            self.setSceneRect(0, 0, self._pixmap.width(), self._pixmap.height())
+            self.addItem(self._scene_item)
+            self.insertItems(0, len(self._image_item.children())-1)
+            self.update()
 
     def insertItems(self, first, last):
         if self._image_item is None:

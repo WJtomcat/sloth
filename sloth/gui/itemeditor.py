@@ -42,6 +42,8 @@ class ItemEditor(QWidget):
         for label in config.ITEMCHECKBOX:
             self.addCheckBoxItem(label)
 
+        self._layout.addStretch(1)
+
     def addNoteItem(self, label_config):
         noteItem = MaskNoteItem(label_config)
         self._note_items.append(noteItem)
@@ -78,12 +80,13 @@ class ItemEditor(QWidget):
         self._layout.addWidget(checkBox)
 
     def _setupGUI(self):
-        self._layout = MyVBoxLayout()
+        self._layout = QHBoxLayout()
         self.setLayout(self._layout)
 
         self.opaqueGroup = QGroupBox()
         self.opaqueGroup.setLayout(self.opaquelayout)
-        self._layout.addWidget(self.opaqueGroup, 1)
+        self._layout.addStretch(1)
+        self._layout.addWidget(self.opaqueGroup)
         self._layout.addStretch(1)
 
     def onItemChanged(self, item):
