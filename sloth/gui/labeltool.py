@@ -13,6 +13,7 @@ from sloth.gui.annotationscene import AnnotationScene
 from sloth.gui.frameviewer import GraphicsView
 from sloth.gui.controlbuttons import ControlButtonWidget
 from sloth.gui.itemeditor import ItemEditor
+from sloth.gui.imageinfo import imageinfo
 from sloth.conf import config
 from sloth.core.utils import import_callable
 from sloth.annotations.model import AnnotationTreeView, FrameModelItem, ImageFileModelItem, CopyAnnotations, InterpolateRange, \
@@ -131,6 +132,7 @@ class MainWindow(QMainWindow):
 
         self.itemEditor.onImageItemChanged(new_image)
         self.property_editor.onImageItemChanged(new_image)
+        self.imageinfo.onImageItemChanged(new_image)
         self.onFitToWindowModeChanged()
         self.treeview.scrollTo(new_image.index())
 
@@ -256,6 +258,9 @@ class MainWindow(QMainWindow):
 
         self.itemEditor = ItemEditor(config)
         self.ui.dockLabelProperties.setWidget(self.itemEditor)
+
+        self.imageinfo = ImageInfo(config)
+        self.ui.dockImageInfo.setWidget(self.imageinfo)
 
         # Scene
         self.scene = AnnotationScene(self.labeltool, items=items, inserters=inserters)
