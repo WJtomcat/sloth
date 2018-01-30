@@ -358,7 +358,10 @@ class LabelTool(QObject):
             'class': 'image',
             'md5': md5,
             'annotations': [],
-            'time': []
+            'time': [],
+            'patientinf': {},
+            'endoscopyinfo': {},
+            'pathologyinfo': {}
         }
         return self._model._root.appendFileItem(fileitem)
 

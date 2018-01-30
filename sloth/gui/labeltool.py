@@ -13,7 +13,7 @@ from sloth.gui.annotationscene import AnnotationScene
 from sloth.gui.frameviewer import GraphicsView
 from sloth.gui.controlbuttons import ControlButtonWidget
 from sloth.gui.itemeditor import ItemEditor
-from sloth.gui.imageinfo import imageinfo
+from sloth.gui.imageinfo import ImageInfo
 from sloth.conf import config
 from sloth.core.utils import import_callable
 from sloth.annotations.model import AnnotationTreeView, FrameModelItem, ImageFileModelItem, CopyAnnotations, InterpolateRange, \
