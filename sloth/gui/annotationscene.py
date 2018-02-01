@@ -111,10 +111,11 @@ class AnnotationScene(QGraphicsScene):
             self._scene_item.setZValue(-1)
             self.setSceneRect(0, 0, self._pixmap.width(), self._pixmap.height())
             self.addItem(self._scene_item)
-            self.insertItems(0, len(self._image_item.children())-1)
+            self.insertItems(0, len(self._image_item.children())-1, edit=True)
             self.update()
 
-    def insertItems(self, first, last):
+    def insertItems(self, first, last, edit=False):
+        print('insertItems')
         if self._image_item is None:
             return
 
@@ -135,6 +136,8 @@ class AnnotationScene(QGraphicsScene):
                 self.addItem(item)
                 if isinstance(item, PolygonItem):
                     item.opaqueChanged(self._opaque)
+                if not edit:
+                    item.setSelected(True)
             else:
                 LOG.debug("Could not find item for annotation with class '%s'" % label_class)
 

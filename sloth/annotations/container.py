@@ -159,7 +159,10 @@ class AnnotationContainer:
 
         if _use_pil:
             im = Image.open(fullpath)
-            return np.asarray(im)
+            im = np.asarray(im)
+            if im.shape[0] == 1080 and im.shape[1] == 1920:
+                im = im[5:942, 596:1675, :].copy()
+            return im
         else:
             return okapy.loadImage(fullpath)
 

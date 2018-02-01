@@ -1,3 +1,4 @@
+#coding=utf-8
 import time
 import logging
 from PyQt4.QtCore import pyqtSignal, QSize, Qt
@@ -527,7 +528,7 @@ class PropertyEditor(QWidget):
         self._label_editor  = None
 
         # Label class buttons
-        self._classbox = QGroupBox("Labels", self)
+        self._classbox = QGroupBox(u"形态分类", self)
         self._classbox_layout = QVBoxLayout()
         self._classbox.setLayout(self._classbox_layout)
 
@@ -535,8 +536,10 @@ class PropertyEditor(QWidget):
         self._layout = MyVBoxLayout()
         self.setLayout(self._layout)
         self._layout.addWidget(self._classbox, 0)
-        self._layout.addStretch(1)
 
         self.lineLayout = QFormLayout()
         self._layout.addLayout(self.lineLayout)
-        self._layout.addStretch(1)
+
+    def setItemEditor(self, itemEditor):
+        self._layout.addWidget(itemEditor)
+        itemEditor.hide()

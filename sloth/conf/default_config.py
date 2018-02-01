@@ -1,3 +1,4 @@
+#coding=utf-8
 # This is sloth's default configuration.
 #
 # The configuration file is a simple python module with module-level
@@ -40,8 +41,8 @@ LABELS = (
         },
         'inserter': 'sloth.items.FreehandItemInserter',
         'item':     'sloth.items.PolygonItem',
-        'hotkey':   'a',
-        'text':     'Advanced Cancer',
+        'hotkey':   'c',
+        'text':     u'进展型癌症(c)',
     },
     {
         'attributes': {
@@ -49,8 +50,8 @@ LABELS = (
         },
         'inserter': 'sloth.items.FreehandItemInserter',
         'item':     'sloth.items.PolygonItem',
-        'hotkey':   's',
-        'text':     'Superficial Neoplasia',
+        'hotkey':   'n',
+        'text':     u'表浅型瘤变(n)',
     },
     {
         'attributes': {
@@ -58,8 +59,8 @@ LABELS = (
         },
         'inserter': 'sloth.items.FreehandItemInserter',
         'item':     'sloth.items.PolygonItem',
-        'hotkey':   't',
-        'text':     'Submucosal Tumor',
+        'hotkey':   's',
+        'text':     u'粘膜下瘤变(s)',
     },
     {
         'attributes': {
@@ -68,7 +69,7 @@ LABELS = (
         'inserter': 'sloth.items.FreehandItemInserter',
         'item':     'sloth.items.PolygonItem',
         'hotkey':   'm',
-        'text':     'Misc',
+        'text':     u'炎症及其他(m)',
     },
     {
         'attributes': {
@@ -76,13 +77,15 @@ LABELS = (
         },
         'inserter': 'sloth.items.FreehandEraser',
         'hotkey':   'Ctrl+e',
-        'text':     'Eraser(e)',
+        'text':     u'橡皮檫(e)',
     },
 )
 
-NOTES = []
+NOTES = [u'备注']
 
-INPUTLINE = ['Invasion Depth', 'size.W', 'size.H', 'size.D']
+INPUTLINE = []
+
+ITEMLINES = [u'病变尺寸W', u'病变大小H', u'病变大小D', u'浸润深度']
 
 COMBOCLASS= (
 )
@@ -95,7 +98,7 @@ ITEMNOTES = []
 ITEMCOMBOCLASS= (
     {
         'text':     'Pathology info',
-        'items':     ['default', 'Negative for IEN', 'Low-grade IEN', 'High-grade neoplasia', 'Submucosal carcinoma'],
+        'items':     [u'病理分类', u'上皮内瘤变阴性', u'低级别上皮内瘤变', u'高级别瘤变', u'粘膜下癌变'],
     },
 )
 

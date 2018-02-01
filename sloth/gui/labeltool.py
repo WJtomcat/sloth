@@ -76,7 +76,7 @@ class MainWindow(QMainWindow):
 
         self.labeltool = labeltool
         self.setupGui()
-        # self.loadApplicationSettings()
+        self.loadApplicationSettings()
         self.onAnnotationsLoaded()
 
     # Slots
@@ -257,7 +257,8 @@ class MainWindow(QMainWindow):
         self.ui.dockProperties.setWidget(self.property_editor)
 
         self.itemEditor = ItemEditor(config)
-        self.ui.dockLabelProperties.setWidget(self.itemEditor)
+        self.property_editor.setItemEditor(self.itemEditor)
+        self.itemEditor.hide()
 
         self.imageinfo = ImageInfo(config)
         self.ui.dockImageInfo.setWidget(self.imageinfo)
@@ -266,9 +267,6 @@ class MainWindow(QMainWindow):
         self.scene = AnnotationScene(self.labeltool, items=items, inserters=inserters)
         self.property_editor.insertionModeStarted.connect(self.scene.onInsertionModeStarted)
         self.property_editor.insertionModeEnded.connect(self.scene.onInsertionModeEnded)
-
-        self.itemEditor.sliderChanged.connect(self.scene.onSliderChanged)
-        self.itemEditor.checkChanged.connect(self.scene.onCheckChanged)
 
         # SceneView
         self.view = GraphicsView(self)
@@ -321,7 +319,7 @@ class MainWindow(QMainWindow):
         # View menu
         self.ui.menu_Views.addAction(self.ui.dockProperties.toggleViewAction())
         self.ui.menu_Views.addAction(self.ui.dockAnnotations.toggleViewAction())
-        self.ui.menu_Views.addAction(self.ui.dockLabelProperties.toggleViewAction())
+        self.ui.menu_Views.addAction(self.ui.dockImageInfo.toggleViewAction())
 
         # Annotation menu
         self.copyAnnotations = CopyAnnotations(self.labeltool)

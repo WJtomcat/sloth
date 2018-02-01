@@ -9,40 +9,18 @@ class ImageInfo(QWidget):
 
     def __init__(self, config, parent=None):
         QWidget.__init__(self, parent)
-        self.patient_info = QTextEdit()
-        # self.patient_info.setEnabled(False)
-        self.endoscopy_info = QTextEdit()
-        # self.endoscopy_info.setEnabled(False)
-        self.pathology_info = QTextEdit()
-        # self.pathology_info.setEnabled(False)
-
+        self.infotable = QTextEdit()
+        self.infotable.setReadOnly(True)
         self._setupGUI()
 
-    def _setupGUI(self):
-        self.patientBox = QGroupBox('Patient Information')
-        self.endoscopyBox = QGroupBox('Endoscopy Information')
-        self.pathologyBox = QGroupBox('Pathology Information')
-        self.patient_layout = QVBoxLayout()
-        self.endoscopy_layout = QVBoxLayout()
-        self.pathology_layout = QVBoxLayout()
-        self.patient_layout.addWidget(self.patient_info)
-        self.endoscopy_layout.addWidget(self.endoscopy_info)
-        self.pathology_layout.addWidget(self.pathology_info)
-        self.patientBox.setLayout(self.patient_layout)
-        self.endoscopyBox.setLayout(self.endoscopy_layout)
-        self.pathologyBox.setLayout(self.pathology_layout)
-
+    def _setupGUI(self):        
         self.layout = QVBoxLayout()
-        self.layout.addWidget(self.patientBox)
-        self.layout.addWidget(self.endoscopyBox)
-        self.layout.addWidget(self.pathologyBox)
+        self.layout.addWidget(self.infotable)
         self.setLayout(self.layout)
 
     def onImageItemChanged(self, image_item):
         if image_item is None:
-            self.patient_info.clear()
-            self.endoscopy_info.clear()
-            self.pathology_info.clear()
+            self.infotable.clear()
             return
         image_item = image_item.getAnnotations()
 
@@ -52,13 +30,14 @@ class ImageInfo(QWidget):
         for i in keys:
             try:
                 if i == 'age':
-                    tmp = i + ': ' + str(patientinf[i]) + '\n'
+                    tmp = i + ':  \n' + str(patientinf[i]) + '\n \n'
                 else:
-                    tmp = i + ': ' + patientinf[i] + '\n'
+                    tmp = i + ':  \n' + patientinf[i] + '\n \n'
                 ann += tmp
             except KeyError:
                 continue
-        self.patient_info.setText(ann)
+        ann += '\n'
+        self.infotable.setText(ann)
 
         ann = ''
         endoscopyinfo = image_item['endoscopyinfo']
@@ -66,12 +45,12 @@ class ImageInfo(QWidget):
         print(keys)
         for i in keys:
             try:
-                tmp = i + ':' + str(endoscopyinfo[i]) + '\n'
+                tmp = i + ':  \n' + str(endoscopyinfo[i]) + '\n \n'
                 ann += tmp
             except KeyError:
                 continue
-        print(ann)
-        self.endoscopy_info.setText(ann)
+        ann += '\n'
+        self.infotable.append(ann)
 
         ann = ''
         pathologyinfo = image_item['pathologyinfo']
@@ -80,9 +59,10 @@ class ImageInfo(QWidget):
         for i in keys:
             try:
                 print('try once')
-                tmp = i + ':' + str(pathologyinfo[i]) + '\n'
+                tmp = i + ':  \n' + str(pathologyinfo[i]) + '\n \n'
                 ann += tmp
             except KeyError:
                 print('keyerror')
                 continue
-        self.pathology_info.setText(ann)
+        ann += '\n'
+        self.infotable.append(ann)

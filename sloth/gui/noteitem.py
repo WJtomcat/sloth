@@ -184,3 +184,44 @@ class MaskNoteItem(QTextEdit):
         self.textChanged.disconnect(self.inputupdate)
         self.setText('')
         self.textChanged.connect(self.inputupdate)
+
+
+
+class MaskLineItem(QLineEdit):
+    def __init__(self, config, parent=None):
+        QLineEdit.__init__(self, parent)
+        self.labelclass = config
+        self._item = None
+        self.textChanged.connect(self.inputupdate)
+
+    def onItemChanged(self, item):
+        self._item = item
+        self.loadNote()
+
+    def loadNote(self):
+        if self._item is None:
+            self.resetNote()
+            return
+        if not self._item.isSelected():
+            self.resetNote()
+            self._item = None
+            return
+        note = self._item.dataTo(self.labelclass)
+        if note == '':
+            self.resetNote()
+            return
+        else:
+            self.textChanged.disconnect(self.inputupdate)
+            self.setText(note)
+            self.textChanged.connect(self.inputupdate)
+
+    def inputupdate(self):
+        if self._item is None:
+            return
+        text = unicode(self.text())
+        self._item.updateTo(self.labelclass, text)
+
+    def resetNote(self):
+        self.textChanged.disconnect(self.inputupdate)
+        self.setText('')
+        self.textChanged.connect(self.inputupdate)
