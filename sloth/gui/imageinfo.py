@@ -13,7 +13,7 @@ class ImageInfo(QWidget):
         self.infotable.setReadOnly(True)
         self._setupGUI()
 
-    def _setupGUI(self):        
+    def _setupGUI(self):
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.infotable)
         self.setLayout(self.layout)
@@ -42,7 +42,6 @@ class ImageInfo(QWidget):
         ann = ''
         endoscopyinfo = image_item['endoscopyinfo']
         keys = ['hp'.decode('utf-8'), 'description'.decode('utf-8'), 'conclusion'.decode('utf-8'), 'report_date'.decode('utf-8'), 'label'.decode('utf-8')]
-        print(keys)
         for i in keys:
             try:
                 tmp = i + ':  \n' + str(endoscopyinfo[i]) + '\n \n'
@@ -54,15 +53,12 @@ class ImageInfo(QWidget):
 
         ann = ''
         pathologyinfo = image_item['pathologyinfo']
-        print(pathologyinfo)
         keys = ['text'.decode('utf-8'), 'accept_date'.decode('utf-8')]
         for i in keys:
             try:
-                print('try once')
                 tmp = i + ':  \n' + str(pathologyinfo[i]) + '\n \n'
                 ann += tmp
             except KeyError:
-                print('keyerror')
                 continue
         ann += '\n'
         self.infotable.append(ann)

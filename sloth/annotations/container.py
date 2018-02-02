@@ -8,8 +8,6 @@ from sloth.core.utils import import_callable
 import logging
 LOG = logging.getLogger(__name__)
 
-import dicom
-
 try:
     import cPickle as pickle
 except ImportError:
@@ -171,8 +169,6 @@ class AnnotationContainer:
         if not os.path.exists(fullpath):
             LOG.warn("Image file %s does not exist." % fullpath)
             return None
-        print(fullpath)
-        print(depth)
         dcm = dicom.read_file(fullpath, force=True)
         return dcm.pixel_array[depth,:,:]
 

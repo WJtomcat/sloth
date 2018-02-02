@@ -475,7 +475,6 @@ class DicomFileModelItem(FileModelItem):
         fi = KeyValueModelItem.getAnnotations(self)
         fi['annotations'] = [child.getAnnotations() for child in self.children()
                              if hasattr(child, 'getAnnotations')]
-        print(fi)
         return fi
 
 

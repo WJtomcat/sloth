@@ -416,7 +416,6 @@ class PropertyEditor(QWidget):
     def addComboClass(self, label_config):
         if 'text' not in label_config:
             raise ImproperlyConfigured("Combobox with no text found")
-        print(label_config)
         attrs = label_config['text']
         if 'items' not in label_config:
             raise ImproperlyConfigured("Combobox with no items found")

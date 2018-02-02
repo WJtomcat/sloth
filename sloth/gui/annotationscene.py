@@ -115,7 +115,6 @@ class AnnotationScene(QGraphicsScene):
             self.update()
 
     def insertItems(self, first, last, edit=False):
-        print('insertItems')
         if self._image_item is None:
             return
 
