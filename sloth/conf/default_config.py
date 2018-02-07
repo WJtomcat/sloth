@@ -85,9 +85,13 @@ NOTES = [u'备注']
 
 INPUTLINE = []
 
-ITEMLINES = [u'病变尺寸W', u'病变大小H', u'病变大小D', u'浸润深度']
+ITEMLINES = [u'病变大小W', u'病变大小H', u'病变大小D', u'浸润深度']
 
 COMBOCLASS= (
+    {
+        'text':     u'图片类型',
+        'items':     [u'白光', u'窄带光', u'超声', u'其他'],
+    },
 )
 
 CHECKBOX = []

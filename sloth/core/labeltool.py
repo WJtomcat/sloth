@@ -22,6 +22,13 @@ try:
 except ImportError:
     pass
 
+def delname(ann):
+    for item in ann:
+        try:
+            item['patientinf']['name'] = ''
+        except KeyError:
+            print('Dont have name.')
+    return ann
 
 class LabelTool(QObject):
     """
@@ -243,7 +250,7 @@ class LabelTool(QObject):
             return None
         return self._model.root().getAnnotations()
 
-    def saveAnnotations(self, fname):
+    def saveAnnotations(self, fname, todel=False):
         success = False
         try:
             # create new container if the filename is different
@@ -252,15 +259,20 @@ class LabelTool(QObject):
 
             # Get annotations dict
             ann = self._model.root().getAnnotations()
+            if todel:
+                ann = delname(ann)
 
             self._container.save(ann, fname)
             #self._model.writeback() # write back changes that are cached in the model itself, e.g. mask updates
             msg = "Successfully saved %s (%d files, %d annotations)" % \
                   (fname, self._model.root().numFiles(), self._model.root().numAnnotations())
             success = True
+            print('true')
             self._model.setDirty(False)
+            print('true')
         except Exception as e:
             msg = "Error: Saving failed (%s)" % str(e)
+            print(msg)
 
         self.statusMessage.emit(msg)
         return success

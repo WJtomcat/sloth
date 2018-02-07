@@ -322,14 +322,16 @@ class PropertyEditor(QWidget):
 
         # Add label classes from config
 
-        for label in config.NOTES:
-            self.addNoteItem(label)
+
 
         for label in config.LABELS:
             self.addLabelClass(label)
 
         for label in config.COMBOCLASS:
             self.addComboClass(label)
+
+        for label in config.NOTES:
+            self.addNoteItem(label)
 
         for label in config.INPUTLINE:
             self.addInputLine(label)
@@ -532,7 +534,7 @@ class PropertyEditor(QWidget):
         self._classbox.setLayout(self._classbox_layout)
 
         # Global widget
-        self._layout = MyVBoxLayout()
+        self._layout = QVBoxLayout()
         self.setLayout(self._layout)
         self._layout.addWidget(self._classbox, 0)
 

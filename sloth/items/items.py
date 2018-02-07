@@ -1,3 +1,4 @@
+#coding=utf-8
 import logging
 from PyQt4.Qt import *
 from sloth.items.inserters import *
@@ -898,16 +899,23 @@ class PolygonItem(BaseItem):
         self.menu = QMenu();
         self.actionGroup = QActionGroup(self.menu)
         for i in config.LABELS:
-            itemclass = i['attributes']['class']
-            if itemclass != 'Eraser':
+            itemclass = i['text']
+            if itemclass != u'橡皮檫(e)':
                 action = self.menu.addAction(itemclass)
             self.actionGroup.addAction(action)
         self.actionGroup.triggered.connect(self.onMenuAction)
 
     @pyqtSlot()
     def onMenuAction(self, action):
+        text = action.text()
+        print(text)
+        itemclass = ''
+        for i in config.LABELS:
+            if i['text'] == text:
+                itemclass = i['attributes']['class']
+                break
         self._model_item.update({
-            self.prefix() + 'class': str(action.text()),
+            self.prefix() + 'class': itemclass,
         })
         color = config.COLORMAP[self._model_item['class']]
         brush = QBrush(QColor(color[0], color[1], color[2], 255), Qt.SolidPattern)

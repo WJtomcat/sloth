@@ -76,7 +76,7 @@ class MainWindow(QMainWindow):
 
         self.labeltool = labeltool
         self.setupGui()
-        # self.loadApplicationSettings()
+        self.loadApplicationSettings()
         self.onAnnotationsLoaded()
 
     # Slots
@@ -446,14 +446,14 @@ class MainWindow(QMainWindow):
         return self.labeltool.saveAnnotations(filename)
 
     def fileSaveAs(self):
-        fname = '.'  # self.annotations.filename() or '.'
+        fname = os.getcwd()  # self.annotations.filename() or '.'
         format_str = ' '.join(self.labeltool.getAnnotationFilePatterns())
         fname = QFileDialog.getSaveFileName(self,
                 "%s - Save Annotations" % APP_NAME, fname,
                 "%s annotation files (%s)" % (APP_NAME, format_str))
 
         if len(str(fname)) > 0:
-            return self.labeltool.saveAnnotations(str(fname))
+            return self.labeltool.saveAnnotations(str(fname), todel=True)
         return False
 
     def getMd5(self, filename):
