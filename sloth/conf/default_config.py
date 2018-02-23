@@ -42,6 +42,7 @@ LABELS = (
         'inserter': 'sloth.items.FreehandItemInserter',
         'item':     'sloth.items.PolygonItem',
         'hotkey':   'c',
+        'menu':     u'进展型癌症',
         'text':     u'进展型癌症(c)',
     },
     {
@@ -51,6 +52,7 @@ LABELS = (
         'inserter': 'sloth.items.FreehandItemInserter',
         'item':     'sloth.items.PolygonItem',
         'hotkey':   'n',
+        'menu':     u'表浅型瘤变',
         'text':     u'表浅型瘤变(n)',
     },
     {
@@ -60,6 +62,7 @@ LABELS = (
         'inserter': 'sloth.items.FreehandItemInserter',
         'item':     'sloth.items.PolygonItem',
         'hotkey':   's',
+        'menu':     u'粘膜下瘤变',
         'text':     u'粘膜下瘤变(s)',
     },
     {
@@ -69,6 +72,7 @@ LABELS = (
         'inserter': 'sloth.items.FreehandItemInserter',
         'item':     'sloth.items.PolygonItem',
         'hotkey':   'm',
+        'menu':     u'炎症及其他',
         'text':     u'炎症及其他(m)',
     },
     {
@@ -77,7 +81,61 @@ LABELS = (
         },
         'inserter': 'sloth.items.FreehandEraser',
         'hotkey':   'Ctrl+e',
+        'menu':     u'橡皮檫',
         'text':     u'橡皮檫(e)',
+    },
+)
+
+DETAILS = (
+    {
+        'attributes': {
+            'class':    'XQ',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'v',
+        'menu':     u'血管缺失',
+        'text':     u'血管缺失(v)',
+    },
+    {
+        'attributes': {
+            'class':    'ZJ',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'f',
+        'menu':     u'皱壁集中',
+        'text':     u'皱壁集中(f)',
+    },
+    {
+        'attributes': {
+            'class':    'FB',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'p',
+        'menu':     u'发白',
+        'text':     u'发白(p)',
+    },
+    {
+        'attributes': {
+            'class':    'FH',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'r',
+        'menu':     u'发红',
+        'text':     u'发红(r)',
+    },
+    {
+        'attributes': {
+            'class':    'CX',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'b',
+        'menu':     u'出血',
+        'text':     u'出血(b)',
     },
 )
 
@@ -124,7 +182,7 @@ def color_map(N=256):
         cmap.append([r, g, b])
     return cmap
 
-classes = ['Eraser', 'AC', 'SN', 'ST', 'Misc']
+classes = ['Eraser', 'AC', 'SN', 'ST', 'Misc', 'XQ', 'FB', 'CX', 'FH', '.', '..', '...', '....', '.....', '......', '.......','ZJ']
 
 def getcolormap():
     cmap = color_map()

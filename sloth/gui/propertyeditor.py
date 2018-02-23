@@ -322,10 +322,11 @@ class PropertyEditor(QWidget):
 
         # Add label classes from config
 
-
-
         for label in config.LABELS:
             self.addLabelClass(label)
+
+        for label in config.DETAILS:
+            self.addDetailClass(label)
 
         for label in config.COMBOCLASS:
             self.addComboClass(label)
@@ -333,13 +334,13 @@ class PropertyEditor(QWidget):
         for label in config.NOTES:
             self.addNoteItem(label)
 
-        for label in config.INPUTLINE:
-            self.addInputLine(label)
+        # for label in config.INPUTLINE:
+        #     self.addInputLine(label)
 
-        for label in config.CHECKBOX:
-            self.addCheckBoxItem(label)
+        # for label in config.CHECKBOX:
+        #     self.addCheckBoxItem(label)
 
-        self._layout.addStretch(2)
+        self._layout.addStretch(1)
 
     def onModelChanged(self, new_model):
         attrs = set([k for k, v in self._attribute_handlers.items() if v.autoAddEnabled()])
@@ -365,8 +366,8 @@ class PropertyEditor(QWidget):
             item.onImageItemChanged(image_item)
         for item in self._combo_items:
             item.onImageItemChanged(image_item)
-        for item in self._check_items:
-            item.onImageItemChanged(image_item)
+        # for item in self._check_items:
+        #     item.onImageItemChanged(image_item)
 
     def addLabelClass(self, label_config):
         # Check label configuration
@@ -400,6 +401,38 @@ class PropertyEditor(QWidget):
             hotkey.activated.connect(button.click)
             self._class_shortcuts[label_class] = hotkey
 
+    def addDetailClass(self, label_config):
+        # Check label configuration
+        if 'attributes' not in label_config:
+            raise ImproperlyConfigured("Label with no 'attributes' dict found")
+        attrs = label_config['attributes']
+        if 'class' not in attrs:
+            raise ImproperlyConfigured("Labels must have an attribute 'class'")
+        label_class = attrs['class']
+        if label_class in self._class_config:
+            raise ImproperlyConfigured("Label with class '%s' defined more than once" % label_class)
+
+        # Store config
+        self._class_config[label_class] = label_config
+
+        # Parse configuration and create handlers and item
+        self.parseConfiguration(label_class, label_config)
+
+        # Add label class button
+        button_text = label_config['text']
+        button = QPushButton(button_text, self)
+        button.setCheckable(True)
+        button.setFlat(True)
+        button.clicked.connect(bind(self.onClassButtonPressed, label_class))
+        self._class_buttons[label_class] = button
+        self._detailbox_layout.addWidget(button)
+
+        # Add hotkey
+        if 'hotkey' in label_config:
+            hotkey = QShortcut(QKeySequence(label_config['hotkey']), self)
+            hotkey.activated.connect(button.click)
+            self._class_shortcuts[label_class] = hotkey
+
     def addNoteItem(self, label_config):
         noteItem = NoteItem(label_config)
         self._note_items.append(noteItem)
@@ -409,10 +442,10 @@ class PropertyEditor(QWidget):
         layout.addWidget(noteItem)
         self._layout.addWidget(box)
 
-    def addInputLine(self, label_config):
-        lineItem = LineEditItem(label_config)
-        self._line_items.append(lineItem)
-        self.lineLayout.addRow(label_config, lineItem)
+    # def addInputLine(self, label_config):
+    #     lineItem = LineEditItem(label_config)
+    #     self._line_items.append(lineItem)
+    #     self.lineLayout.addRow(label_config, lineItem)
 
 
     def addComboClass(self, label_config):
@@ -431,16 +464,16 @@ class PropertyEditor(QWidget):
         layout.addWidget(combobox)
         self._layout.addWidget(box)
 
-    def addCheckBoxItem(self, label_config):
-        if 'text' not in label_config:
-            raise ImproperlyConfigured("CheckBoxItem with no text found")
-        attrs = label_config['text']
-        if 'items' not in label_config:
-            raise ImproperlyConfigured("CheckBoxItem with no items found")
-        items = label_config['items']
-        checkBox = CheckBoxItem(label_config, attrs)
-        self._check_items.append(checkBox)
-        self._layout.addWidget(checkBox)
+    # def addCheckBoxItem(self, label_config):
+    #     if 'text' not in label_config:
+    #         raise ImproperlyConfigured("CheckBoxItem with no text found")
+    #     attrs = label_config['text']
+    #     if 'items' not in label_config:
+    #         raise ImproperlyConfigured("CheckBoxItem with no items found")
+    #     items = label_config['items']
+    #     checkBox = CheckBoxItem(label_config, attrs)
+    #     self._check_items.append(checkBox)
+    #     self._layout.addWidget(checkBox)
 
     def parseConfiguration(self, label_class, label_config):
         attrs = label_config['attributes']
@@ -484,18 +517,18 @@ class PropertyEditor(QWidget):
             button.setChecked(lc == label_class)
         LOG.debug("Starting insertion mode for %s" % label_class)
         self._label_editor = LabelEditor([self._class_items[label_class]], self, True)
-        self._layout.insertWidget(1, self._label_editor, 0)
+        # self._layout.insertWidget(1, self._label_editor, 0)
         self.insertionModeStarted.emit(label_class)
 
     def endInsertionMode(self, uncheck_buttons=True):
         if self._label_editor is not None:
             LOG.debug("Ending insertion/edit mode")
-            self._label_editor.hide()
-            self._layout.removeWidget(self._label_editor)
+            # self._label_editor.hide()
+            # self._layout.removeWidget(self._label_editor)
             self._label_editor = None
-            if uncheck_buttons:
-                self.uncheckAllButtons()
-            self.insertionModeEnded.emit()
+        if uncheck_buttons:
+            self.uncheckAllButtons()
+        self.insertionModeEnded.emit()
 
     def uncheckAllButtons(self):
         for lc, button in self._class_buttons.items():
@@ -521,7 +554,7 @@ class PropertyEditor(QWidget):
         LOG.debug("Starting edit mode for items: %s" % model_items)
         self._label_editor = LabelEditor(model_items, self)
         self.markEditButtons(self._label_editor.labelClasses())
-        self._layout.insertWidget(1, self._label_editor, 0)
+        # self._layout.insertWidget(1, self._label_editor, 0)
 
     def _setupGUI(self):
         self._class_buttons = {}
@@ -533,13 +566,23 @@ class PropertyEditor(QWidget):
         self._classbox_layout = QVBoxLayout()
         self._classbox.setLayout(self._classbox_layout)
 
+        self._detailbox = QGroupBox(u"形态细节(可选)", self)
+        self._detailbox_layout = QVBoxLayout()
+        self._detailbox.setLayout(self._detailbox_layout)
+
+        self.labelGroup = QGroupBox()
+        self.label_layout = QHBoxLayout()
+        self.labelGroup.setLayout(self.label_layout)
+        self.label_layout.addWidget(self._classbox)
+        self.label_layout.addWidget(self._detailbox)
+
         # Global widget
         self._layout = QVBoxLayout()
         self.setLayout(self._layout)
-        self._layout.addWidget(self._classbox, 0)
+        self._layout.addWidget(self.labelGroup, 0)
 
-        self.lineLayout = QFormLayout()
-        self._layout.addLayout(self.lineLayout)
+        # self.lineLayout = QFormLayout()
+        # self._layout.addLayout(self.lineLayout)
 
     def setItemEditor(self, itemEditor):
         self._layout.addWidget(itemEditor)

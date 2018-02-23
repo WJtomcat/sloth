@@ -1,5 +1,6 @@
 import json
 import os
+from PIL import Image
 
 def doencode(a):
     out = dict()
@@ -20,7 +21,6 @@ for filename in files:
     if os.path.splitext(filename)[1] == '.json':
         f = open(filename, 'r')
         f = json.load(f)
-        print(type(f))
         patientinf = f['patient_info']
         # patientinf = doencode(patientinf)
         endoscopyinfo = f['endoscopy_info']

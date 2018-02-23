@@ -21,8 +21,7 @@ def decodeImage(fname):
         im = np.asarray(img)
         # if im.shape[0] == 1080 and im.shape[1] == 1920:
         #     im = im[5:942, 596:1675, :].copy()
-        im = autoCutImage(im)
-        print(im.shape)
+        im = autoCutImage(im, 50)
         return Image.fromarray(im)
     except IOError:
         img = dicom.read_file(fname)
@@ -39,13 +38,13 @@ def decodeImage(fname):
         return Image.fromarray(img)
 
 
-def autoCutImage(img):
+def autoCutImage(img, thresh):
     image = np.asarray(img, dtype=np.int64)
-    print(image.shape)
-    img = image.reshape((img.shape[0], img.shape[1]*img.shape[2]))
+    # img = image.reshape((img.shape[0], img.shape[1]*img.shape[2]))
     # out = np.zeros(img.shape[0], dtype=int64)
+    img = np.add.reduce(image, 2)
+    img = img > thresh
     img = np.add.reduce(img, 1)
-    print(img.shape)
     themin = np.int64(0)
     imin = 0
     themax = np.int64(0)
@@ -62,13 +61,11 @@ def autoCutImage(img):
     themax = np.int64(0)
     imax = 0
     tmp = np.int64(0)
-    print(image.shape)
-    img = np.add.reduce(image, 0)
-    img = np.add.reduce(img, 1)
+    img = np.add.reduce(image, 2)
+    img = img > thresh
+    img = np.add.reduce(img, 0)
     for i in range(img.shape[0]-1):
         tmp = img[i+1] - img[i]
-        # print(tmp)
-        # print(themin)
         if tmp < themin:
             themin = tmp
             imin = i
@@ -76,15 +73,9 @@ def autoCutImage(img):
         if tmp > themax:
             themax = tmp
             imax = i
-    print(imax)
-    print(imin)
     image = image[:, imax:imin, :].copy()
     image = np.asarray(image, dtype=np.uint8)
     return image
-
-
-
-
 
 
 def readjson(dirname):

@@ -267,9 +267,7 @@ class LabelTool(QObject):
             msg = "Successfully saved %s (%d files, %d annotations)" % \
                   (fname, self._model.root().numFiles(), self._model.root().numAnnotations())
             success = True
-            print('true')
             self._model.setDirty(False)
-            print('true')
         except Exception as e:
             msg = "Error: Saving failed (%s)" % str(e)
             print(msg)

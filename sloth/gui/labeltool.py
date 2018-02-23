@@ -246,10 +246,10 @@ class MainWindow(QMainWindow):
         # get inserters and items from labels
         # FIXME for handling the new-style config correctly
         inserters = dict([(label['attributes']['class'], label['inserter'])
-                          for label in config.LABELS
+                          for label in config.LABELS + config.DETAILS
                           if 'class' in label.get('attributes', {}) and 'inserter' in label])
         items = dict([(label['attributes']['class'], label['item'])
-                      for label in config.LABELS
+                      for label in config.LABELS + config.DETAILS
                       if 'class' in label.get('attributes', {}) and 'item' in label])
 
         # Property Editor
@@ -506,8 +506,6 @@ class MainWindow(QMainWindow):
         md5 = self.getMd5(fname)
         dcm = dicom.read_file(fname, force=True)
         depth = dcm.pixel_array.shape[0]
-        print(dcm.pixel_array.shape)
-        print(depth)
         item = self.labeltool.addDicomFile(fname, md5, depth)
 
 

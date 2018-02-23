@@ -3,7 +3,7 @@ import logging
 from PyQt4.Qt import *
 from sloth.items.inserters import *
 from sloth.conf import config
-from PyQt4.QtGui import QMenu
+from PyQt4.QtGui import QMenu, QKeySequence
 
 
 LOG = logging.getLogger(__name__)
@@ -764,7 +764,6 @@ class PolygonItem(BaseItem):
                       QGraphicsItem.ItemSendsGeometryChanges |
                       QGraphicsItem.ItemSendsScenePositionChanges)
         self._polygon = None
-        self.setOpacity(0.6)
 
         self._updatePolygon(self._dataToPolygon(self._model_item))
         LOG.debug("Constructed polygon %s for model item %s" %
@@ -777,6 +776,7 @@ class PolygonItem(BaseItem):
         pen.setStyle(Qt.NoPen)
         self.setPen(pen)
         self._opacity = 0.6
+        self.setOpacity(self._opacity)
 
         self.createMenu()
 
@@ -898,20 +898,21 @@ class PolygonItem(BaseItem):
     def createMenu(self):
         self.menu = QMenu();
         self.actionGroup = QActionGroup(self.menu)
-        for i in config.LABELS:
-            itemclass = i['text']
-            if itemclass != u'橡皮檫(e)':
+        for i in config.LABELS + config.DETAILS:
+            itemclass = i['menu']
+            if itemclass != u'橡皮檫':
                 action = self.menu.addAction(itemclass)
+                # action.setShortcut(QKeySequence.fromString(i['hotkey']))
             self.actionGroup.addAction(action)
         self.actionGroup.triggered.connect(self.onMenuAction)
 
     @pyqtSlot()
     def onMenuAction(self, action):
         text = action.text()
-        print(text)
+        # print(text)
         itemclass = ''
-        for i in config.LABELS:
-            if i['text'] == text:
+        for i in config.LABELS + config.DETAILS:
+            if i['menu'] == text:
                 itemclass = i['attributes']['class']
                 break
         self._model_item.update({
