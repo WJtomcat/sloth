@@ -257,15 +257,18 @@ class MainWindow(QMainWindow):
         # self.ui.dockProperties.setWidget(self.property_editor)
 
 
-        self.tabwidget = QTabWidget()
-        self.tabwidget.addTab(self.property_editor, 'property_editor')
+        # self.tabwidget = QTabWidget()
+        # self.tabwidget.addTab(self.property_editor, 'property_editor')
+        #
+        # self.itemEditor = ItemEditor(config, self.tabwidget)
+        # # self.property_editor.setItemEditor(self.itemEditor)
+        # self.tabwidget.addTab(self.itemEditor, 'item_editor')
+        # # self.itemEditor.hide()
+        # self.ui.dockProperties.setWidget(self.tabwidget)
 
-        self.ui.dockProperties.setWidget(self.tabwidget)
-
-        self.itemEditor = ItemEditor(config, self.tabwidget)
-        # self.property_editor.setItemEditor(self.itemEditor)
-        self.tabwidget.addTab(self.itemEditor, 'item_editor')
-        # self.itemEditor.hide()
+        self.ui.dockProperties.setWidget(self.property_editor)
+        self.itemEditor = ItemEditor(config)
+        self.property_editor.addItemEditor(self.itemEditor)
 
         self.imageinfo = ImageInfo(config)
         self.ui.dockImageInfo.setWidget(self.imageinfo)

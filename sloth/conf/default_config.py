@@ -47,6 +47,16 @@ LABELS = (
     },
     {
         'attributes': {
+            'class':    'LQ',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'q',
+        'menu':     u'隆起型',
+        'text':     u'隆起型(q)',
+    },
+    {
+        'attributes': {
             'class':    '1s',
         },
         'inserter': 'sloth.items.FreehandItemInserter',
@@ -54,66 +64,6 @@ LABELS = (
         'hotkey':   'n',
         'menu':     u'1s',
         'text':     u'1s(s)',
-    },
-    {
-        'attributes': {
-            'class':    'IIa',
-        },
-        'inserter': 'sloth.items.FreehandItemInserter',
-        'item':     'sloth.items.PolygonItem',
-        'hotkey':   'a',
-        'menu':     u'IIa',
-        'text':     u'IIa(a)',
-    },
-    {
-        'attributes': {
-            'class':    'IIb',
-        },
-        'inserter': 'sloth.items.FreehandItemInserter',
-        'item':     'sloth.items.PolygonItem',
-        'hotkey':   'b',
-        'menu':     u'IIb',
-        'text':     u'IIb(b)',
-    },
-    {
-        'attributes': {
-            'class':    'IIc',
-        },
-        'inserter': 'sloth.items.FreehandItemInserter',
-        'item':     'sloth.items.PolygonItem',
-        'hotkey':   'c',
-        'menu':     u'IIc',
-        'text':     u'IIc(c)',
-    },
-    {
-        'attributes': {
-            'class':    'III',
-        },
-        'inserter': 'sloth.items.FreehandItemInserter',
-        'item':     'sloth.items.PolygonItem',
-        'hotkey':   '3',
-        'menu':     u'III',
-        'text':     u'III(3)',
-    },
-    {
-        'attributes': {
-            'class':    'IIa+IIc',
-        },
-        'inserter': 'sloth.items.FreehandItemInserter',
-        'item':     'sloth.items.PolygonItem',
-        'hotkey':   '4',
-        'menu':     u'IIa+IIc',
-        'text':     u'IIa+IIc(4)',
-    },
-    {
-        'attributes': {
-            'class':    'LQ',
-        },
-        'inserter': 'sloth.items.FreehandItemInserter',
-        'item':     'sloth.items.PolygonItem',
-        'hotkey':   'p',
-        'menu':     u'隆起型',
-        'text':     u'隆起型(p)',
     },
     {
         'attributes': {
@@ -127,6 +77,16 @@ LABELS = (
     },
     {
         'attributes': {
+            'class':    'IIa',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'a',
+        'menu':     u'IIa',
+        'text':     u'IIa(a)',
+    },
+    {
+        'attributes': {
             'class':    'JRK',
         },
         'inserter': 'sloth.items.FreehandItemInserter',
@@ -134,6 +94,16 @@ LABELS = (
         'hotkey':   'i',
         'menu':     u'浸润溃疡型',
         'text':     u'浸润溃疡型(i)',
+    },
+    {
+        'attributes': {
+            'class':    'IIb',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'b',
+        'menu':     u'IIb',
+        'text':     u'IIb(b)',
     },
     {
         'attributes': {
@@ -147,22 +117,52 @@ LABELS = (
     },
     {
         'attributes': {
+            'class':    'IIc',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'c',
+        'menu':     u'IIc',
+        'text':     u'IIc(c)',
+    },
+    {
+        'attributes': {
             'class':    'NX',
         },
         'inserter': 'sloth.items.FreehandItemInserter',
         'item':     'sloth.items.PolygonItem',
-        'hotkey':   's',
+        'hotkey':   'm',
         'menu':     u'粘膜下瘤变',
-        'text':     u'粘膜下瘤变(s)',
+        'text':     u'粘膜下瘤变(m)',
+    },
+    {
+        'attributes': {
+            'class':    'III',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   '3',
+        'menu':     u'III',
+        'text':     u'III(3)',
     },
     {
         'attributes': {
             'class':    'Eraser',
         },
         'inserter': 'sloth.items.FreehandEraser',
-        'hotkey':   'Ctrl+e',
+        'hotkey':   'e',
         'menu':     u'橡皮檫',
         'text':     u'橡皮檫(e)',
+    },
+    {
+        'attributes': {
+            'class':    'IIa+IIc',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   '4',
+        'menu':     u'IIa+IIc',
+        'text':     u'IIa+IIc(4)',
     },
 )
 
@@ -213,9 +213,9 @@ DETAILS = (
         },
         'inserter': 'sloth.items.FreehandItemInserter',
         'item':     'sloth.items.PolygonItem',
-        'hotkey':   'b',
+        'hotkey':   'h',
         'menu':     u'出血',
-        'text':     u'出血(b)',
+        'text':     u'出血(h)',
     },
 )
 
@@ -239,11 +239,11 @@ ITEMNOTES = []
 
 ITEMCOMBOCLASS= (
     {
-        'text':     u'病理主要分类',
+        'text':     u'病理主要',
         'items':     [u'病理分类', u'炎症及其他', u'低级别上皮内瘤变', u'高级别上皮内瘤变', u'早癌-粘膜层', u'早癌-粘膜下层', u'进展期癌'],
     },
     {
-        'text':     u'病理次要分类',
+        'text':     u'病理次要',
         'items':     [u'病理分类', u'炎症及其他', u'低级别上皮内瘤变', u'高级别上皮内瘤变', u'早癌-粘膜层', u'早癌-粘膜下层', u'进展期癌'],
     },
 )
@@ -273,7 +273,7 @@ COLORMAP = {
     '1s':       cmap[2],
     'IIa':      cmap[3],
     'IIb':      cmap[4],
-    'IIc':      cmap[9],
+    'IIc':      cmap[8],
     'III':      cmap[10],
     'IIa+IIc':  cmap[11],
     'LQ':       cmap[12],
@@ -283,8 +283,8 @@ COLORMAP = {
     'NX':       cmap[17],
     'XQ':       cmap[5],
     'FB':       cmap[6],
-    'CX':       cmap[7],
-    'FH':       cmap[8],
+    'CX':       cmap[9],
+    'FH':       cmap[7],
     'ZJ':       cmap[16],
 }
 

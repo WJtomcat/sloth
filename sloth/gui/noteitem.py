@@ -6,6 +6,7 @@ class NoteItem(QTextEdit):
         QTextEdit.__init__(self, parent)
         self.setMinimumHeight(40)
         self.setMaximumHeight(80)
+        self.setMaximumWidth(240)
         # self.setFixedHeight(100)
         self.hasitemflag = False
         self.labelclass = config

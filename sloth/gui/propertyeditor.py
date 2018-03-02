@@ -308,6 +308,7 @@ class PropertyEditor(QWidget):
 
     def __init__(self, config, parent=None):
         QWidget.__init__(self, parent)
+        self.setMaximumWidth(290)
         self._class_config       = {}
         self._class_items        = {}
         self._class_prototypes   = {}
@@ -579,8 +580,19 @@ class PropertyEditor(QWidget):
         # Global widget
         self._layout = QVBoxLayout()
         self.setLayout(self._layout)
+        # self._layout.addStretch(1)
         self._layout.addWidget(self._classbox)
         self._layout.addWidget(self._detailbox)
+        # self._layout.addStretch(2)
 
         # self.lineLayout = QFormLayout()
         # self._layout.addLayout(self.lineLayout)
+
+    def mouseDoubleClickEvent(self, event):
+        pos = event.pos()
+        print(pos)
+        wi = self.childAt(pos)
+        print(wi)
+
+    def addItemEditor(self, editor):
+        self._layout.addWidget(editor)

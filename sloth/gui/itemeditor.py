@@ -12,10 +12,8 @@ from sloth.gui.checkboxitem import MaskCheckBoxItem
 
 class ItemEditor(QGroupBox):
 
-    def __init__(self, config, tab, parent=None):
+    def __init__(self, config, parent=None):
         QGroupBox.__init__(self, parent)
-
-        self.tab = tab
 
         self._note_items = []
         self._line_items = []
@@ -36,6 +34,7 @@ class ItemEditor(QGroupBox):
 
         self._setupGUI()
         self.setDisabled(True)
+        self.hide()
 
     def addLineItem(self, label_config):
         lineitem = MaskLineItem(label_config)
@@ -77,9 +76,11 @@ class ItemEditor(QGroupBox):
     def onItemChanged(self, item):
         if item is not None:
             # self.tab.setCurrentIndex(self.tab.indexOf(self))
+            self.show()
             self.setEnabled(True)
         else:
             # self.tab.setCurrentIndex(0)
+            self.hide()
             self.setDisabled(True)
         for i in self._note_items:
             i.onItemChanged(item)
