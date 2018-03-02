@@ -4,8 +4,8 @@ from sloth.annotations.model import *
 class NoteItem(QTextEdit):
     def __init__(self, config, parent=None, default_properties=None):
         QTextEdit.__init__(self, parent)
-        self.setMinimumHeight(80)
-        self.setMaximumHeight(200)
+        self.setMinimumHeight(40)
+        self.setMaximumHeight(80)
         # self.setFixedHeight(100)
         self.hasitemflag = False
         self.labelclass = config

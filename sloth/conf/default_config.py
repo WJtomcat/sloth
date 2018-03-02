@@ -37,43 +37,123 @@
 LABELS = (
     {
         'attributes': {
-            'class':    'AC',
+            'class':    '1p',
         },
         'inserter': 'sloth.items.FreehandItemInserter',
         'item':     'sloth.items.PolygonItem',
-        'hotkey':   'c',
-        'menu':     u'进展型癌症',
-        'text':     u'进展型癌症(c)',
+        'hotkey':   'p',
+        'menu':     u'1p',
+        'text':     u'1p(p)',
     },
     {
         'attributes': {
-            'class':    'SN',
+            'class':    '1s',
         },
         'inserter': 'sloth.items.FreehandItemInserter',
         'item':     'sloth.items.PolygonItem',
         'hotkey':   'n',
-        'menu':     u'表浅型瘤变',
-        'text':     u'表浅型瘤变(n)',
+        'menu':     u'1s',
+        'text':     u'1s(s)',
     },
     {
         'attributes': {
-            'class':    'ST',
+            'class':    'IIa',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'a',
+        'menu':     u'IIa',
+        'text':     u'IIa(a)',
+    },
+    {
+        'attributes': {
+            'class':    'IIb',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'b',
+        'menu':     u'IIb',
+        'text':     u'IIb(b)',
+    },
+    {
+        'attributes': {
+            'class':    'IIc',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'c',
+        'menu':     u'IIc',
+        'text':     u'IIc(c)',
+    },
+    {
+        'attributes': {
+            'class':    'III',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   '3',
+        'menu':     u'III',
+        'text':     u'III(3)',
+    },
+    {
+        'attributes': {
+            'class':    'IIa+IIc',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   '4',
+        'menu':     u'IIa+IIc',
+        'text':     u'IIa+IIc(4)',
+    },
+    {
+        'attributes': {
+            'class':    'LQ',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'p',
+        'menu':     u'隆起型',
+        'text':     u'隆起型(p)',
+    },
+    {
+        'attributes': {
+            'class':    'JBK',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'u',
+        'menu':     u'局部溃疡型',
+        'text':     u'局部溃疡型(u)',
+    },
+    {
+        'attributes': {
+            'class':    'JRK',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'i',
+        'menu':     u'浸润溃疡型',
+        'text':     u'浸润溃疡型(i)',
+    },
+    {
+        'attributes': {
+            'class':    'MJ',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'd',
+        'menu':     u'弥漫浸润型',
+        'text':     u'弥漫浸润型(d)',
+    },
+    {
+        'attributes': {
+            'class':    'NX',
         },
         'inserter': 'sloth.items.FreehandItemInserter',
         'item':     'sloth.items.PolygonItem',
         'hotkey':   's',
         'menu':     u'粘膜下瘤变',
         'text':     u'粘膜下瘤变(s)',
-    },
-    {
-        'attributes': {
-            'class':    'Misc',
-        },
-        'inserter': 'sloth.items.FreehandItemInserter',
-        'item':     'sloth.items.PolygonItem',
-        'hotkey':   'm',
-        'menu':     u'炎症及其他',
-        'text':     u'炎症及其他(m)',
     },
     {
         'attributes': {
@@ -113,9 +193,9 @@ DETAILS = (
         },
         'inserter': 'sloth.items.FreehandItemInserter',
         'item':     'sloth.items.PolygonItem',
-        'hotkey':   'p',
+        'hotkey':   'w',
         'menu':     u'发白',
-        'text':     u'发白(p)',
+        'text':     u'发白(w)',
     },
     {
         'attributes': {
@@ -159,8 +239,12 @@ ITEMNOTES = []
 
 ITEMCOMBOCLASS= (
     {
-        'text':     'Pathology info',
-        'items':     [u'病理分类', u'上皮内瘤变阴性', u'低级别上皮内瘤变', u'高级别瘤变', u'粘膜下癌变'],
+        'text':     u'病理主要分类',
+        'items':     [u'病理分类', u'炎症及其他', u'低级别上皮内瘤变', u'高级别上皮内瘤变', u'早癌-粘膜层', u'早癌-粘膜下层', u'进展期癌'],
+    },
+    {
+        'text':     u'病理次要分类',
+        'items':     [u'病理分类', u'炎症及其他', u'低级别上皮内瘤变', u'高级别上皮内瘤变', u'早癌-粘膜层', u'早癌-粘膜下层', u'进展期癌'],
     },
 )
 
@@ -182,17 +266,29 @@ def color_map(N=256):
         cmap.append([r, g, b])
     return cmap
 
-classes = ['Eraser', 'AC', 'SN', 'ST', 'Misc', 'XQ', 'FB', 'CX', 'FH', '.', '..', '...', '....', '.....', '......', '.......','ZJ']
+cmap = color_map()
+COLORMAP = {
+    'Eraser':   cmap[0],
+    '1p':       cmap[1],
+    '1s':       cmap[2],
+    'IIa':      cmap[3],
+    'IIb':      cmap[4],
+    'IIc':      cmap[9],
+    'III':      cmap[10],
+    'IIa+IIc':  cmap[11],
+    'LQ':       cmap[12],
+    'JBK':      cmap[13],
+    'JRK':      cmap[14],
+    'MJ':       cmap[15],
+    'NX':       cmap[17],
+    'XQ':       cmap[5],
+    'FB':       cmap[6],
+    'CX':       cmap[7],
+    'FH':       cmap[8],
+    'ZJ':       cmap[16],
+}
 
-def getcolormap():
-    cmap = color_map()
-    colormap = {}
-    cmap = cmap[1:len(cmap)]
-    for label, color in zip(classes, cmap):
-        colormap[label] = color
-    return colormap
 
-COLORMAP = getcolormap()
 
 
 # HOTKEYS

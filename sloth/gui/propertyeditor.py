@@ -563,27 +563,24 @@ class PropertyEditor(QWidget):
 
         # Label class buttons
         self._classbox = QGroupBox(u"形态分类", self)
-        self._classbox_layout = QVBoxLayout()
+        self._classbox_layout = FloatingLayout()
         self._classbox.setLayout(self._classbox_layout)
 
         self._detailbox = QGroupBox(u"形态细节(可选)", self)
-        self._detailbox_layout = QVBoxLayout()
+        self._detailbox_layout = FloatingLayout()
         self._detailbox.setLayout(self._detailbox_layout)
 
-        self.labelGroup = QGroupBox()
-        self.label_layout = QHBoxLayout()
-        self.labelGroup.setLayout(self.label_layout)
-        self.label_layout.addWidget(self._classbox)
-        self.label_layout.addWidget(self._detailbox)
+        # self.labelGroup = QGroupBox()
+        # self.label_layout = QHBoxLayout()
+        # self.labelGroup.setLayout(self.label_layout)
+        # self.label_layout.addWidget(self._classbox)
+        # self.label_layout.addWidget(self._detailbox)
 
         # Global widget
         self._layout = QVBoxLayout()
         self.setLayout(self._layout)
-        self._layout.addWidget(self.labelGroup, 0)
+        self._layout.addWidget(self._classbox)
+        self._layout.addWidget(self._detailbox)
 
         # self.lineLayout = QFormLayout()
         # self._layout.addLayout(self.lineLayout)
-
-    def setItemEditor(self, itemEditor):
-        self._layout.addWidget(itemEditor)
-        itemEditor.hide()

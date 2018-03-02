@@ -12,8 +12,10 @@ from sloth.gui.checkboxitem import MaskCheckBoxItem
 
 class ItemEditor(QGroupBox):
 
-    def __init__(self, config, parent=None):
+    def __init__(self, config, tab, parent=None):
         QGroupBox.__init__(self, parent)
+
+        self.tab = tab
 
         self._note_items = []
         self._line_items = []
@@ -33,7 +35,7 @@ class ItemEditor(QGroupBox):
             self.addComboClass(label)
 
         self._setupGUI()
-        # self.hide()
+        self.setDisabled(True)
 
     def addLineItem(self, label_config):
         lineitem = MaskLineItem(label_config)
@@ -66,7 +68,7 @@ class ItemEditor(QGroupBox):
             layout = QFormLayout()
             box.setLayout(layout)
             for item in self._combo_items:
-                layout.addRow(item)
+                layout.addRow(item.labelclass, item)
             layout.addRow(u'浸润深度', self._line_items[-1])
             self._layout.addWidget(box)
 
@@ -74,9 +76,11 @@ class ItemEditor(QGroupBox):
 
     def onItemChanged(self, item):
         if item is not None:
-            self.show()
+            # self.tab.setCurrentIndex(self.tab.indexOf(self))
+            self.setEnabled(True)
         else:
-            self.hide()
+            # self.tab.setCurrentIndex(0)
+            self.setDisabled(True)
         for i in self._note_items:
             i.onItemChanged(item)
         for i in self._combo_items:
@@ -96,6 +100,7 @@ class ItemEditor(QGroupBox):
         self.resetItem()
 
     def resetItem(self):
+        self.onItemDisSelected()
         for i in self._note_items:
             i.resetNote()
         for i in self._combo_items:

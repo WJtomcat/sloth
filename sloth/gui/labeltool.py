@@ -4,7 +4,7 @@ import functools
 import fnmatch
 from PyQt4.QtGui import QMainWindow, QSizePolicy, QWidget, QVBoxLayout, QAction,\
         QKeySequence, QLabel, QItemSelectionModel, QMessageBox, QFileDialog, QFrame, \
-        QDockWidget, QProgressBar, QProgressDialog
+        QDockWidget, QProgressBar, QProgressDialog, QTabWidget
 from PyQt4.QtCore import SIGNAL, QSettings, QSize, QPoint, QVariant, QFileInfo, QTimer, pyqtSignal, QObject
 import PyQt4.uic as uic
 from sloth.gui import qrc_icons  # needed for toolbar icons
@@ -254,11 +254,18 @@ class MainWindow(QMainWindow):
 
         # Property Editor
         self.property_editor = PropertyEditor(config)
-        self.ui.dockProperties.setWidget(self.property_editor)
+        # self.ui.dockProperties.setWidget(self.property_editor)
 
-        self.itemEditor = ItemEditor(config)
-        self.property_editor.setItemEditor(self.itemEditor)
-        self.itemEditor.hide()
+
+        self.tabwidget = QTabWidget()
+        self.tabwidget.addTab(self.property_editor, 'property_editor')
+
+        self.ui.dockProperties.setWidget(self.tabwidget)
+
+        self.itemEditor = ItemEditor(config, self.tabwidget)
+        # self.property_editor.setItemEditor(self.itemEditor)
+        self.tabwidget.addTab(self.itemEditor, 'item_editor')
+        # self.itemEditor.hide()
 
         self.imageinfo = ImageInfo(config)
         self.ui.dockImageInfo.setWidget(self.imageinfo)
