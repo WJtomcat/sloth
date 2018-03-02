@@ -1,6 +1,7 @@
 #coding=utf-8
 from PyQt4.QtCore import pyqtSignal, QSize, Qt
-from PyQt4.QtGui import QWidget, QGroupBox, QFormLayout, QVBoxLayout, QHBoxLayout, QCheckBox, QPushButton, QScrollArea, QLineEdit, QDoubleValidator, QIntValidator, QShortcut, QKeySequence, QSlider
+from PyQt4.QtGui import QWidget, QGroupBox, QFormLayout, QVBoxLayout, QHBoxLayout, QCheckBox, QPushButton,\
+    QScrollArea, QLineEdit, QDoubleValidator, QIntValidator, QShortcut, QKeySequence, QSlider, QCursor
 from sloth.core.exceptions import ImproperlyConfigured
 from sloth.annotations.model import AnnotationModelItem
 from sloth.gui.floatinglayout import FloatingLayout
@@ -10,10 +11,13 @@ from sloth.gui.noteitem import NoteItem, MaskNoteItem, MaskLineItem
 from sloth.gui.comboitem import ComboItem, MaskComboItem
 from sloth.gui.checkboxitem import MaskCheckBoxItem
 
-class ItemEditor(QGroupBox):
+class ItemEditor(QWidget):
 
-    def __init__(self, config, parent=None):
+    def __init__(self, config, mainwindow, parent=None):
         QGroupBox.__init__(self, parent)
+
+        # self.tab = tab
+        self.mainwindow = mainwindow
 
         self._note_items = []
         self._line_items = []
@@ -34,7 +38,6 @@ class ItemEditor(QGroupBox):
 
         self._setupGUI()
         self.setDisabled(True)
-        self.hide()
 
     def addLineItem(self, label_config):
         lineitem = MaskLineItem(label_config)
@@ -73,10 +76,25 @@ class ItemEditor(QGroupBox):
 
         self._layout.addStretch(1)
 
+    def calpos(self):
+        selfpos = QCursor.pos()
+        selfsize = self.size()
+        mainsize = self.mainwindow.size()
+        x = selfpos.x()
+        y = selfpos.y()
+        if selfpos.x() + selfsize.width() > mainsize.width():
+            x = selfpos.x() - selfsize.width()
+        if selfpos.y() + selfsize.height() > mainsize.height():
+            y = y - selfsize.height()
+        return x, y
+
     def onItemChanged(self, item):
         if item is not None:
             # self.tab.setCurrentIndex(self.tab.indexOf(self))
+            self.hide()
             self.show()
+            x, y = self.calpos()
+            self.move(x, y)
             self.setEnabled(True)
         else:
             # self.tab.setCurrentIndex(0)

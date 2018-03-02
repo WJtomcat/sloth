@@ -323,8 +323,11 @@ class PropertyEditor(QWidget):
 
         # Add label classes from config
 
-        for label in config.LABELS:
-            self.addLabelClass(label)
+        for i, label in enumerate(config.LABELS):
+            if i < 7:
+                self.addLabelClass(label, 1)
+            else:
+                self.addLabelClass(label, 2)
 
         for label in config.DETAILS:
             self.addDetailClass(label)
@@ -370,7 +373,7 @@ class PropertyEditor(QWidget):
         # for item in self._check_items:
         #     item.onImageItemChanged(image_item)
 
-    def addLabelClass(self, label_config):
+    def addLabelClass(self, label_config, boxnum):
         # Check label configuration
         if 'attributes' not in label_config:
             raise ImproperlyConfigured("Label with no 'attributes' dict found")
@@ -394,7 +397,10 @@ class PropertyEditor(QWidget):
         button.setFlat(True)
         button.clicked.connect(bind(self.onClassButtonPressed, label_class))
         self._class_buttons[label_class] = button
-        self._classbox_layout.addWidget(button)
+        if boxnum == 1:
+            self.box1layout.addWidget(button)
+        else:
+            self.box2layout.addWidget(button)
 
         # Add hotkey
         if 'hotkey' in label_config:
@@ -564,7 +570,19 @@ class PropertyEditor(QWidget):
 
         # Label class buttons
         self._classbox = QGroupBox(u"形态分类", self)
-        self._classbox_layout = FloatingLayout()
+        self._classbox_layout = QHBoxLayout()
+
+        self.box1 = QGroupBox(self)
+        self.box1layout = QVBoxLayout()
+        self.box1.setLayout(self.box1layout)
+        self.box2 = QGroupBox(self)
+        self.box2layout = QVBoxLayout()
+        self.box2.setLayout(self.box2layout)
+
+        self._classbox_layout.addWidget(self.box1)
+        self._classbox_layout.addWidget(self.box2)
+
+
         self._classbox.setLayout(self._classbox_layout)
 
         self._detailbox = QGroupBox(u"形态细节(可选)", self)
@@ -582,17 +600,13 @@ class PropertyEditor(QWidget):
         self.setLayout(self._layout)
         # self._layout.addStretch(1)
         self._layout.addWidget(self._classbox)
+
         self._layout.addWidget(self._detailbox)
         # self._layout.addStretch(2)
 
         # self.lineLayout = QFormLayout()
         # self._layout.addLayout(self.lineLayout)
 
-    def mouseDoubleClickEvent(self, event):
-        pos = event.pos()
-        print(pos)
-        wi = self.childAt(pos)
-        print(wi)
 
     def addItemEditor(self, editor):
         self._layout.addWidget(editor)

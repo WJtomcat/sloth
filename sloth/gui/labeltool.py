@@ -267,8 +267,8 @@ class MainWindow(QMainWindow):
         # self.ui.dockProperties.setWidget(self.tabwidget)
 
         self.ui.dockProperties.setWidget(self.property_editor)
-        self.itemEditor = ItemEditor(config)
-        self.property_editor.addItemEditor(self.itemEditor)
+        self.itemEditor = ItemEditor(config, self)
+        # self.property_editor.addItemEditor(self.itemEditor)
 
         self.imageinfo = ImageInfo(config)
         self.ui.dockImageInfo.setWidget(self.imageinfo)
@@ -533,6 +533,7 @@ class MainWindow(QMainWindow):
     ###______________________________________________________________________________
     def closeEvent(self, event):
         if self.okToContinue():
+            self.itemEditor.close()
             self.saveApplicationSettings()
         else:
             event.ignore()

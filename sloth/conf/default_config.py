@@ -47,16 +47,6 @@ LABELS = (
     },
     {
         'attributes': {
-            'class':    'LQ',
-        },
-        'inserter': 'sloth.items.FreehandItemInserter',
-        'item':     'sloth.items.PolygonItem',
-        'hotkey':   'q',
-        'menu':     u'隆起型',
-        'text':     u'隆起型(q)',
-    },
-    {
-        'attributes': {
             'class':    '1s',
         },
         'inserter': 'sloth.items.FreehandItemInserter',
@@ -64,16 +54,6 @@ LABELS = (
         'hotkey':   'n',
         'menu':     u'1s',
         'text':     u'1s(s)',
-    },
-    {
-        'attributes': {
-            'class':    'JBK',
-        },
-        'inserter': 'sloth.items.FreehandItemInserter',
-        'item':     'sloth.items.PolygonItem',
-        'hotkey':   'u',
-        'menu':     u'局部溃疡型',
-        'text':     u'局部溃疡型(u)',
     },
     {
         'attributes': {
@@ -87,16 +67,6 @@ LABELS = (
     },
     {
         'attributes': {
-            'class':    'JRK',
-        },
-        'inserter': 'sloth.items.FreehandItemInserter',
-        'item':     'sloth.items.PolygonItem',
-        'hotkey':   'i',
-        'menu':     u'浸润溃疡型',
-        'text':     u'浸润溃疡型(i)',
-    },
-    {
-        'attributes': {
             'class':    'IIb',
         },
         'inserter': 'sloth.items.FreehandItemInserter',
@@ -104,16 +74,6 @@ LABELS = (
         'hotkey':   'b',
         'menu':     u'IIb',
         'text':     u'IIb(b)',
-    },
-    {
-        'attributes': {
-            'class':    'MJ',
-        },
-        'inserter': 'sloth.items.FreehandItemInserter',
-        'item':     'sloth.items.PolygonItem',
-        'hotkey':   'd',
-        'menu':     u'弥漫浸润型',
-        'text':     u'弥漫浸润型(d)',
     },
     {
         'attributes': {
@@ -127,16 +87,6 @@ LABELS = (
     },
     {
         'attributes': {
-            'class':    'NX',
-        },
-        'inserter': 'sloth.items.FreehandItemInserter',
-        'item':     'sloth.items.PolygonItem',
-        'hotkey':   'm',
-        'menu':     u'粘膜下瘤变',
-        'text':     u'粘膜下瘤变(m)',
-    },
-    {
-        'attributes': {
             'class':    'III',
         },
         'inserter': 'sloth.items.FreehandItemInserter',
@@ -144,15 +94,6 @@ LABELS = (
         'hotkey':   '3',
         'menu':     u'III',
         'text':     u'III(3)',
-    },
-    {
-        'attributes': {
-            'class':    'Eraser',
-        },
-        'inserter': 'sloth.items.FreehandEraser',
-        'hotkey':   'e',
-        'menu':     u'橡皮檫',
-        'text':     u'橡皮檫(e)',
     },
     {
         'attributes': {
@@ -164,6 +105,65 @@ LABELS = (
         'menu':     u'IIa+IIc',
         'text':     u'IIa+IIc(4)',
     },
+    {
+        'attributes': {
+            'class':    'LQ',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'q',
+        'menu':     u'隆起型',
+        'text':     u'隆起型(q)',
+    },
+    {
+        'attributes': {
+            'class':    'JBK',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'u',
+        'menu':     u'局部溃疡型',
+        'text':     u'局部溃疡型(u)',
+    },
+    {
+        'attributes': {
+            'class':    'JRK',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'i',
+        'menu':     u'浸润溃疡型',
+        'text':     u'浸润溃疡型(i)',
+    },
+    {
+        'attributes': {
+            'class':    'MJ',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'd',
+        'menu':     u'弥漫浸润型',
+        'text':     u'弥漫浸润型(d)',
+    },
+    {
+        'attributes': {
+            'class':    'NX',
+        },
+        'inserter': 'sloth.items.FreehandItemInserter',
+        'item':     'sloth.items.PolygonItem',
+        'hotkey':   'm',
+        'menu':     u'粘膜下瘤变',
+        'text':     u'粘膜下瘤变(m)',
+    },
+    {
+        'attributes': {
+            'class':    'Eraser',
+        },
+        'inserter': 'sloth.items.FreehandEraser',
+        'hotkey':   'e',
+        'menu':     u'橡皮檫',
+        'text':     u'橡皮檫(e)',
+    },    
 )
 
 DETAILS = (
