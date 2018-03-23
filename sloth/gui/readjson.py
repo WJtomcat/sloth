@@ -73,7 +73,10 @@ def autoCutImage(img, thresh):
         if tmp > themax:
             themax = tmp
             imax = i
-    image = image[:, imax:imin, :].copy()
+    if imin-imax < 800:
+        image = image[:, 595:1675, :]
+    else:
+        image = image[:, imax:imin, :].copy()
     image = np.asarray(image, dtype=np.uint8)
     return image
 
@@ -98,7 +101,12 @@ def readjson(dirname):
             os.chdir('..')
             assert os.path.exists(fname)
             finalname = os.path.basename(fname) + '.jpg'
-            im = decodeImage(fname)
+            try:
+                im = decodeImage(fname)
+            except Exception as e:
+                print(e)
+                print('Error happened in File: ' + fname)
+                continue
             if im is not None:
                 os.chdir(dirname + '/output')
                 im.save(finalname)
