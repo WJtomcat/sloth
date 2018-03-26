@@ -22,7 +22,7 @@
 #############################################################################
 
 import sip
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 
 
 class ModelTest(QtCore.QObject):
@@ -99,7 +99,7 @@ class ModelTest(QtCore.QObject):
     def rowCount(self):
         """
         Tests self.model's implementation of QtCore.QAbstractItemModel::rowCount() and hasChildren()
-        
+
         self.models that are dynamically populated are not as fully tested here.
         """
         # check top row
@@ -116,7 +116,7 @@ class ModelTest(QtCore.QObject):
             assert(rows >= 0)
             if rows > 0:
                 assert(self.model.hasChildren(secondlvl) == True)
-        
+
         # The self.models rowCount() is tested more extensively in checkChildren,
         # but this catches the big mistakes
 
@@ -251,7 +251,7 @@ class ModelTest(QtCore.QObject):
         variant = self.model.data(self.model.index(0,0,QtCore.QModelIndex()), QtCore.Qt.WhatsThisRole)
         if variant.isValid():
             assert( variant.canConvert( QtCore.QVariant.String ) )
-        
+
         # General Purpose roles that should return a QSize
         variant = self.model.data(self.model.index(0,0,QtCore.QModelIndex()), QtCore.Qt.SizeHintRole)
         if variant.isValid():
@@ -261,7 +261,7 @@ class ModelTest(QtCore.QObject):
         variant = self.model.data(self.model.index(0,0,QtCore.QModelIndex()), QtCore.Qt.FontRole)
         if variant.isValid():
             assert( variant.canConvert( QtCore.QVariant.Font ) )
-        
+
         # Check that the alignment is one we know about
         variant = self.model.data(self.model.index(0,0,QtCore.QModelIndex()), QtCore.Qt.TextAlignmentRole)
         if variant.isValid():

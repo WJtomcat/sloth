@@ -1,9 +1,11 @@
 #coding=utf-8
 import logging
-from PyQt4.Qt import *
+from PyQt5.Qt import *
 from sloth.items.inserters import *
 from sloth.conf import config
-from PyQt4.QtGui import QMenu, QKeySequence
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
 
 
 LOG = logging.getLogger(__name__)
@@ -906,7 +908,7 @@ class PolygonItem(BaseItem):
             self.actionGroup.addAction(action)
         self.actionGroup.triggered.connect(self.onMenuAction)
 
-    @pyqtSlot()
+    # @pyqtSlot()
     def onMenuAction(self, action):
         text = action.text()
         # print(text)

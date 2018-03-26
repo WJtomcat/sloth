@@ -2,16 +2,16 @@ import json
 import os
 from PIL import Image
 import numpy as np
-import dicom
+import pydicom
 
 def doencode(a):
     out = dict()
     for key, value in a.items():
-        akey = key.encode('utf-8')
+        akey = key
         if isinstance(value, int):
             avalue = str(value)
         else:
-            avalue = value.encode('utf-8')
+            avalue = value
         out[akey] = avalue
     return out
 
@@ -24,7 +24,7 @@ def decodeImage(fname):
         im = autoCutImage(im, 50)
         return Image.fromarray(im)
     except IOError:
-        img = dicom.read_file(fname)
+        img = pydicom.read_file(fname)
         img = img.PixelData
         img = img[20:]
         tmp = open('tmp.jpg', 'wb')
@@ -82,7 +82,7 @@ def autoCutImage(img, thresh):
 
 
 def readjson(dirname):
-    dirname = unicode(dirname)
+    # dirname = unicode(dirname)
     files = os.listdir(dirname)
     os.chdir(dirname)
     os.mkdir('output')

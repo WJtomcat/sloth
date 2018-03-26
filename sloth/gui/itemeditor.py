@@ -1,7 +1,7 @@
 #coding=utf-8
-from PyQt4.QtCore import pyqtSignal, QSize, Qt
-from PyQt4.QtGui import QWidget, QGroupBox, QFormLayout, QVBoxLayout, QHBoxLayout, QCheckBox, QPushButton,\
-    QScrollArea, QLineEdit, QDoubleValidator, QIntValidator, QShortcut, QKeySequence, QSlider, QCursor
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
 from sloth.core.exceptions import ImproperlyConfigured
 from sloth.annotations.model import AnnotationModelItem
 from sloth.gui.floatinglayout import FloatingLayout

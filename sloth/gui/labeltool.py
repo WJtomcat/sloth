@@ -2,11 +2,10 @@
 import logging, os
 import functools
 import fnmatch
-from PyQt4.QtGui import QMainWindow, QSizePolicy, QWidget, QVBoxLayout, QAction,\
-        QKeySequence, QLabel, QItemSelectionModel, QMessageBox, QFileDialog, QFrame, \
-        QDockWidget, QProgressBar, QProgressDialog, QTabWidget
-from PyQt4.QtCore import SIGNAL, QSettings, QSize, QPoint, QVariant, QFileInfo, QTimer, pyqtSignal, QObject
-import PyQt4.uic as uic
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
+import  PyQt5.uic as uic
 from sloth.gui import qrc_icons  # needed for toolbar icons
 from sloth.gui.propertyeditor import PropertyEditor
 from sloth.gui.annotationscene import AnnotationScene
@@ -446,6 +445,7 @@ class MainWindow(QMainWindow):
         fname = QFileDialog.getOpenFileName(self,
                 "%s - Load Annotations" % APP_NAME, path,
                 "%s annotation files (%s)" % (APP_NAME, format_str))
+        fname, _ = fname
         if len(str(fname)) > 0:
             self.labeltool.loadAnnotations(fname)
 
@@ -462,22 +462,14 @@ class MainWindow(QMainWindow):
                 "%s - Save Annotations" % APP_NAME, fname,
                 "%s annotation files (%s)" % (APP_NAME, format_str))
 
+        fname, _ = fname
+
         if len(str(fname)) > 0:
             return self.labeltool.saveAnnotations(str(fname), todel=True)
         return False
 
     def getMd5(self, filename):
-        if not os.path.isfile(filename):
-            return
-        myhash = hashlib.md5()
-        f = file(filename, 'rb')
-        while True:
-            b = f.read(8096)
-            if not b:
-                break
-            myhash.update(b)
-        f.close()
-        return myhash.hexdigest()
+        return ''
 
     def addDir(self):
         path = '.'
@@ -492,6 +484,8 @@ class MainWindow(QMainWindow):
         dirname = dialog.getExistingDirectory(self, "%s - Add Media File" % APP_NAME, path, QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks);
 
         dirname = str(dirname)
+        if dirname == '':
+            return
         os.chdir(dirname)
 
         flag = True

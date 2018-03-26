@@ -366,7 +366,7 @@ class AnnotationScene(QGraphicsScene):
             if item is not None:
                 item.setSelected(True)
         self.blockSignals(block)
-        self.editSelectedItems()
+        # self.editSelectedItems()
 
     def editSelectedItems(self):
         scene_items = self.selectedItems()

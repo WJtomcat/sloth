@@ -1,4 +1,5 @@
-from PyQt4.QtGui import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 from sloth.annotations.model import *
 
 class CheckBoxItem(QGroupBox):

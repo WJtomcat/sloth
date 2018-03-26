@@ -163,7 +163,7 @@ LABELS = (
         'hotkey':   'e',
         'menu':     u'橡皮檫',
         'text':     u'橡皮檫(e)',
-    },    
+    },
 )
 
 DETAILS = (

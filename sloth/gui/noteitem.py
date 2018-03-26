@@ -1,4 +1,6 @@
-from PyQt4.QtGui import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
 from sloth.annotations.model import *
 
 class NoteItem(QTextEdit):
@@ -53,7 +55,8 @@ class NoteItem(QTextEdit):
     def inputupdate(self):
         if self.image_item is None:
             return
-        text = unicode(self.toPlainText())
+        # text = unicode(self.toPlainText())
+        text = self.toPlainText()
         if self.hasitemflag:
             self.child['text'] = text
 
@@ -222,7 +225,8 @@ class MaskLineItem(QLineEdit):
     def inputupdate(self):
         if self._item is None:
             return
-        text = unicode(self.text())
+        # text = unicode(self.text())
+        text = self.text()
         self._item.updateTo(self.labelclass, text)
 
     def resetNote(self):

@@ -1,7 +1,9 @@
 import numpy as np
 import random
 import colorsys
-from PyQt4.QtGui import QImage, qRgb
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
 from sloth.core.exceptions import NotImplementedException
 
 

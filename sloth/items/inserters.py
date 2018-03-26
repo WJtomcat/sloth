@@ -1,7 +1,8 @@
 import math
-from PyQt4.QtGui import *
-from PyQt4.Qt import *
-from items import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
+from sloth.items.items import *
 from sloth.conf import config
 
 

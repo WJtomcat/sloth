@@ -1,12 +1,13 @@
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
 
 
 class Label(QLabel):
-    
+
     def __init__(self, *args, **kwargs):
         QLabel.__init__(self, *args, **kwargs)
-        
+
     def mouseReleaseEvent(self, ev):
         menu = QMenu(self)
         menu.addActions(self.actions())

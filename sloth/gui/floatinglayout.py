@@ -1,5 +1,6 @@
-from PyQt4.QtCore import Qt, QRect, QSize, QPoint
-from PyQt4.QtGui  import QLayout, QSizePolicy, QWidgetItem
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
 
 
 class FloatingLayout(QLayout):
@@ -102,4 +103,3 @@ class FloatingLayout(QLayout):
 
     def sizeHint(self):
         return self.minimumSize()
-

@@ -1,6 +1,7 @@
 import sys
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 from sloth.gui.floatinglayout import FloatingLayout
 import logging
 
@@ -100,7 +101,7 @@ class ButtonArea(QWidget):
             for label in labels:
                 # Description is given in key 'text'.
                 # If empty, use the type attribute.
-                name = label.get('name', '') or label.get('attributes', {}).get('type', '') 
+                name = label.get('name', '') or label.get('attributes', {}).get('type', '')
                 self.add_label(name, label.get('attributes', {}))
 
         self.init_button_lists()
@@ -215,4 +216,3 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main())
-

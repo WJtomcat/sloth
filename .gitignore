@@ -4,3 +4,9 @@ doc/_build/*
 *.py~
 build/*
 .cache
+json
+json/*
+raw
+raw/*
+dist/*
+*.spec

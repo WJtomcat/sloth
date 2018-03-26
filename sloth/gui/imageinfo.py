@@ -1,8 +1,9 @@
-from PyQt4.QtGui import QWidget, QTextEdit, QGroupBox, QVBoxLayout
+#coding=utf-8
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
 
 import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
 
 
 class ImageInfo(QWidget):
@@ -41,7 +42,8 @@ class ImageInfo(QWidget):
 
         ann = ''
         endoscopyinfo = image_item['endoscopyinfo']
-        keys = ['hp'.decode('utf-8'), 'description'.decode('utf-8'), 'conclusion'.decode('utf-8'), 'report_date'.decode('utf-8'), 'label'.decode('utf-8')]
+        keys = [u'hp', u'description', u'conclusion', u'report_date', u'label']
+        # keys = [unicode('hp', 'utf-8'), unicode('description', 'utf-8'), unicode('conclusion', 'utf-8'), unicode('report_data', 'utf-8'), unicode('label', 'utf-8')]
         for i in keys:
             try:
                 tmp = i + ':  \n' + str(endoscopyinfo[i]) + '\n \n'
@@ -53,7 +55,7 @@ class ImageInfo(QWidget):
 
         ann = ''
         pathologyinfo = image_item['pathologyinfo']
-        keys = ['text'.decode('utf-8'), 'accept_date'.decode('utf-8')]
+        keys = [u'text', u'accept_date']
         for i in keys:
             try:
                 tmp = i + ':  \n' + str(pathologyinfo[i]) + '\n \n'
