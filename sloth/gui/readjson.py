@@ -22,7 +22,7 @@ def decodeImage(fname):
         # if im.shape[0] == 1080 and im.shape[1] == 1920:
         #     im = im[5:942, 596:1675, :].copy()
         im = autoCutImage(im, 50)
-        return Image.fromarray(im)
+        return 'jpg', Image.fromarray(im)
     except IOError:
         img = pydicom.read_file(fname)
         img = img.PixelData
@@ -32,10 +32,10 @@ def decodeImage(fname):
         tmp.close()
         img = Image.open('tmp.jpg')
         img = np.asarray(img)
-        if img.shape[0] == 1020 and img.shape[1] == 1276:
-            img = img[:911, 87:1166, :].copy()
-            return Image.fromarray(img)
-        return Image.fromarray(img)
+        # if img.shape[0] == 1020 and img.shape[1] == 1276:
+        #     img = img[:911, 87:1166, :].copy()
+        #     return Image.fromarray(img)
+        return 'dicom', Image.fromarray(img)
 
 
 def autoCutImage(img, thresh):
@@ -102,7 +102,7 @@ def readjson(dirname):
             assert os.path.exists(fname)
             finalname = os.path.basename(fname) + '.jpg'
             try:
-                im = decodeImage(fname)
+                filetype, im = decodeImage(fname)
             except Exception as e:
                 print(e)
                 print('Error happened in File: ' + fname)
@@ -113,6 +113,7 @@ def readjson(dirname):
                 image = {
                     'annotations': [],
                     'class': 'image',
+										'filetype': filetype,
                     'filename': finalname,
                     'md5': '',
                     'time': [],
