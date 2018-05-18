@@ -858,10 +858,13 @@ class PolygonItem(BaseItem):
     def boundingRect(self):
         xn = [p.x() for p in self._polygon]
         yn = [p.y() for p in self._polygon]
-        xmin = min(xn)
-        xmax = max(xn)
-        ymin = min(yn)
-        ymax = max(yn)
+        try:
+            xmin = min(xn)
+            xmax = max(xn)
+            ymin = min(yn)
+            ymax = max(yn)
+        except ValueError:
+            return QRectF(0, 0, 0, 0)
         return QRectF(xmin, ymin, xmax - xmin, ymax - ymin)
 
     def paint(self, painter, option, widget=None):
