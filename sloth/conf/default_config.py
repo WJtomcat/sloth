@@ -157,13 +157,13 @@ LABELS = (
     },
 		{
         'attributes': {
-            'class':    'PU',
+            'class':    'BU',
         },
         'inserter': 'sloth.items.FreehandItemInserter',
         'item':     'sloth.items.PolygonItem',
         'hotkey':   'k',
-        'menu':     u'阳性溃疡',
-        'text':     u'阳性溃疡(k)',
+        'menu':     u'良性溃疡',
+        'text':     u'良性溃疡(k)',
     },
     {
         'attributes': {
@@ -296,7 +296,8 @@ COLORMAP = {
     'CX':       cmap[9],
     'FH':       cmap[7],
     'ZJ':       cmap[16],
-		'PU':				cmap[18],
+    'BU':       cmap[18],
+
 }
 
 
