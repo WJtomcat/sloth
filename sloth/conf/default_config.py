@@ -51,7 +51,7 @@ LABELS = (
         },
         'inserter': 'sloth.items.FreehandItemInserter',
         'item':     'sloth.items.PolygonItem',
-        'hotkey':   'n',
+        'hotkey':   's',
         'menu':     u'1s',
         'text':     u'1s(s)',
     },

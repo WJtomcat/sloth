@@ -8,7 +8,7 @@ from sloth.gui.floatinglayout import FloatingLayout
 from sloth.gui.utils import MyVBoxLayout
 from sloth.utils.bind import bind
 from sloth.gui.noteitem import NoteItem, MaskNoteItem, MaskLineItem
-from sloth.gui.comboitem import ComboItem, MaskComboItem
+from sloth.gui.comboitem import ComboItem, MaskComboItem, ClassComboItem
 from sloth.gui.checkboxitem import MaskCheckBoxItem
 
 class ItemEditor(QWidget):
@@ -24,6 +24,8 @@ class ItemEditor(QWidget):
         self._combo_items = []
         self._check_items = []
 
+        self.classComboItem = self.getClassComboItem(config)
+
         for label in config.ITEMNOTES:
             self.addNoteItem(label)
 
@@ -38,6 +40,21 @@ class ItemEditor(QWidget):
 
         self._setupGUI()
         self.setDisabled(True)
+        self.item = None
+
+    def getClassComboItem(self, config):
+        classes = []
+        for i in config.LABELS + config.DETAILS:
+            itemclass = i['menu']
+            if itemclass != u'橡皮擦':
+                classes.append(i)
+        classitem = ClassComboItem(classes)
+        return classitem
+
+
+    def closeEvent(self, event):
+        if self.item:
+            self.item.setSelected(False)
 
     def addLineItem(self, label_config):
         lineitem = MaskLineItem(label_config)
@@ -56,6 +73,13 @@ class ItemEditor(QWidget):
     def _setupGUI(self):
         self._layout = QVBoxLayout()
         self.setLayout(self._layout)
+
+        box = QGroupBox('', self)
+        layout = QFormLayout()
+        box.setLayout(layout)
+        layout.addRow(u'病灶种类', self.classComboItem)
+        self._layout.addWidget(box)
+
 
         if len(self._line_items) != 0:
             box = QGroupBox(u'病灶量化信息', self)
@@ -89,6 +113,7 @@ class ItemEditor(QWidget):
         return x, y
 
     def onItemChanged(self, item):
+        self.item = item
         if item is not None:
             # self.tab.setCurrentIndex(self.tab.indexOf(self))
             self.hide()
@@ -96,10 +121,12 @@ class ItemEditor(QWidget):
             x, y = self.calpos()
             self.move(x, y)
             self.setEnabled(True)
+
         else:
             # self.tab.setCurrentIndex(0)
             self.hide()
             self.setDisabled(True)
+        self.classComboItem.onItemChanged(item)
         for i in self._note_items:
             i.onItemChanged(item)
         for i in self._combo_items:

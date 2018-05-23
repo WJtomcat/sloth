@@ -780,8 +780,6 @@ class PolygonItem(BaseItem):
         self._opacity = 0.6
         self.setOpacity(self._opacity)
 
-        self.createMenu()
-
     def __call__(self, model_item=None, parent=None):
         item = PolygonItem(model_item, parent)
         item.setPen(self.pen())
@@ -897,25 +895,33 @@ class PolygonItem(BaseItem):
         self._opacity = value
         self.update()
 
-    def contextMenuEvent(self, event):
-        self.menu.exec_(QCursor.pos())
-
-    def createMenu(self):
-        self.menu = QMenu();
-        self.actionGroup = QActionGroup(self.menu)
-        for i in config.LABELS + config.DETAILS:
-            itemclass = i['menu']
-            if itemclass != u'橡皮檫':
-                action = self.menu.addAction(itemclass)
-                # action.setShortcut(QKeySequence.fromString(i['hotkey']))
-            self.actionGroup.addAction(action)
-        self.actionGroup.triggered.connect(self.onMenuAction)
-
-    # @pyqtSlot()
-    def onMenuAction(self, action):
-        text = action.text()
-        # print(text)
-        itemclass = ''
+    # def createMenu(self):
+    #     self.menu = QMenu();
+    #     self.actionGroup = QActionGroup(self.menu)
+    #     for i in config.LABELS + config.DETAILS:
+    #         itemclass = i['menu']
+    #         if itemclass != u'橡皮檫':
+    #             action = self.menu.addAction(itemclass)
+    #             # action.setShortcut(QKeySequence.fromString(i['hotkey']))
+    #         self.actionGroup.addAction(action)
+    #     self.actionGroup.triggered.connect(self.onMenuAction)
+    #
+    # # @pyqtSlot()
+    # def onMenuAction(self, action):
+    #     text = action.text()
+    #     # print(text)
+    #     itemclass = ''
+    #     for i in config.LABELS + config.DETAILS:
+    #         if i['menu'] == text:
+    #             itemclass = i['attributes']['class']
+    #             break
+    #     self._model_item.update({
+    #         self.prefix() + 'class': itemclass,
+    #     })
+    #     color = config.COLORMAP[self._model_item['class']]
+    #     brush = QBrush(QColor(color[0], color[1], color[2], 255), Qt.SolidPattern)
+    #     self.setBrush(brush)
+    def onChangeClassCombo(self, text):
         for i in config.LABELS + config.DETAILS:
             if i['menu'] == text:
                 itemclass = i['attributes']['class']

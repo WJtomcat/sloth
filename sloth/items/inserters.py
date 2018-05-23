@@ -479,7 +479,7 @@ class FreehandItemInserter(PolylineItemInserter):
     def mousePressEvent(self, event, image_item):
         if event.button() != Qt.LeftButton:
             event.accept()
-            return
+            return 1
         pos = event.scenePos()
         self.pressflag = True
         if self._item is None:
@@ -493,14 +493,14 @@ class FreehandItemInserter(PolylineItemInserter):
             self._scene.addItem(self._item)
             self._scene.setMessage("Freehand. Click the mouse to draw.")
             event.accept()
-            return
+            return 1
 
         polygon = self._item.polygon()
         if self._item.endIsSelected():
             if self._item.initregion().contains(pos):
                 self._removeLastPointAndFinish(image_item)
                 event.accept()
-                return
+                return 1
             else:
                 polygon.append(pos)
                 self._item.setPolygon(polygon)
@@ -509,7 +509,7 @@ class FreehandItemInserter(PolylineItemInserter):
             if self._item.endregion().contains(pos):
                 self._removeLastPointAndFinish(image_item)
                 event.accept()
-                return
+                return 1
             else:
                 polygon.insert(0, pos)
                 self._item.setPolygon(polygon)
@@ -517,33 +517,38 @@ class FreehandItemInserter(PolylineItemInserter):
 
         else:
             if self._item.initregion().contains(pos):
+                self._scene.views()[0].viewport().setCursor(Qt.CrossCursor)
                 self.initpos = pos
                 self._item.setinitSelected(True)
                 self._item.update()
                 event.accept()
-                return
+                return 1
             elif self._item.endregion().contains(pos):
+                self._scene.views()[0].viewport().setCursor(Qt.CrossCursor)
                 self.initpos = pos
                 self._item.setendSelected(True)
                 self._item.update()
                 event.accept()
-                return
+                return 1
+            else:
+                return 0
         event.accept()
+        return 1
 
 
     def mouseMoveEvent(self, event, image_item):
         if self._item is None:
-            return
+            return 0
         if not self.pressflag:
             event.accept()
-            return
+            return 0
         pos = event.scenePos()
-        x = pos.x() - self.pos.x()
-        y = pos.y() - self.pos.y()
-        out = abs(x) + abs(y)
-        if out < 3:
-            event.accept()
-            return
+        # x = pos.x() - self.pos.x()
+        # y = pos.y() - self.pos.y()
+        # out = abs(x) + abs(y)
+        # if out < 3:
+        #     event.accept()
+        #     return
         self.pos = pos
         polygon = self._item.polygon()
         if self._item.endIsSelected():
@@ -553,10 +558,11 @@ class FreehandItemInserter(PolylineItemInserter):
             if self.pressflag:
                 polygon.insert(0, pos)
         else:
-            return
+            return 0
         self._item.setPolygon(polygon)
         self._item.update()
         event.accept()
+        return 1
 
     def mouseDoubleClickEvent(self, event, image_item):
         """Finish the polygon when the user double clicks."""
@@ -607,13 +613,14 @@ class FreehandItemInserter(PolylineItemInserter):
         polygon = self._item.polygon()
         assert polygon.size() > 0
         self._updateAnnotation()
-        if self._commit:
-            image_item.addAnnotation(self._ann)
+
         self._scene.removeItem(self._item)
         self.annotationFinished.emit()
         self._item = None
         self._scene.clearMessage()
         self.inserterFinished.emit()
+        if self._commit:
+            image_item.addAnnotation(self._ann)
 
 class FreehandEraser(FreehandItemInserter):
     def _removeLastPointAndFinish(self, image_item):
@@ -680,8 +687,8 @@ class FreePolylineItem(QAbstractGraphicsShapeItem):
 
     def setScale(self, scale):
         pen = self.pen()
-        width = 2.0 / scale
-        circleR = 4.0 / scale
+        width = 5.0 / scale
+        circleR = 10.0 / scale
         pen.setWidthF(width)
         self.setPen(pen)
         self.circleR = circleR
@@ -706,10 +713,10 @@ class FreePolylineItem(QAbstractGraphicsShapeItem):
         painter.drawEllipse(self._endpoint, self.circleR, self.circleR)
 
     def endregion(self):
-        return QRectF(self._endpoint.x()-2*self.circleR, self._endpoint.y()-2*self.circleR, 4*self.circleR, 4*self.circleR)
+        return QRectF(self._endpoint.x()-3*self.circleR, self._endpoint.y()-3*self.circleR, 6*self.circleR, 6*self.circleR)
 
     def initregion(self):
-        return QRectF(self._initpoint.x()-2*self.circleR, self._initpoint.y()-2*self.circleR, 4*self.circleR, 4*self.circleR)
+        return QRectF(self._initpoint.x()-3*self.circleR, self._initpoint.y()-3*self.circleR, 6*self.circleR, 6*self.circleR)
 
     def setinitSelected(self, state):
         if state:

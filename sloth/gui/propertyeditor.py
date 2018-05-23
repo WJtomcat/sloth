@@ -309,7 +309,7 @@ class PropertyEditor(QWidget):
 
     def __init__(self, config, parent=None):
         QWidget.__init__(self, parent)
-        self.setMaximumWidth(290)
+        # self.setMaximumWidth(290)
         self._class_config       = {}
         self._class_items        = {}
         self._class_prototypes   = {}

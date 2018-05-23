@@ -1,6 +1,7 @@
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from sloth.annotations.model import *
+from sloth.conf import *
 
 class ComboItem(QComboBox):
     def __init__(self, config, parent=None, default_properties=None):
@@ -72,6 +73,53 @@ class ComboItem(QComboBox):
     def comboboxChanged(self):
         tmp_index = self.currentIndex()
         self.changeClassesIndex(tmp_index)
+
+class ClassComboItem(QComboBox):
+    def __init__(self, config, parent=None):
+        QComboBox.__init__(self, parent)
+        self.labelclass = 'class'
+        self._item = None
+        self.items = config
+        for i in self.items:
+            self.addItem(i['menu'])
+        self.currentIndexChanged.connect(self.indexUpdate)
+
+    def onItemChanged(self, item):
+        self._item = item
+        self.loadIndex()
+
+    def loadIndex(self):
+        if self._item is None:
+            self.resetIndex()
+            return
+        if not self._item.isSelected():
+            self.resetIndex()
+            self._item = None
+            return
+        index = self._item.dataTo(self.labelclass)
+        if index == '':
+            self.resetIndex()
+            return
+        else:
+            for i in self.items:
+                if index == i['attributes']['class']:
+                    text = i['menu']
+            index = self.findText(text, flags=Qt.MatchExactly)
+            self.currentIndexChanged.disconnect(self.indexUpdate)
+            self.setCurrentIndex(index)
+            self.currentIndexChanged.connect(self.indexUpdate)
+
+    def indexUpdate(self):
+        if self._item is None:
+            return
+        # index = self.currentIndex()
+        text = self.currentText()
+        self._item.onChangeClassCombo(text)
+
+    def resetIndex(self):
+        self.currentIndexChanged.disconnect(self.indexUpdate)
+        self.setCurrentIndex(0)
+        self.currentIndexChanged.connect(self.indexUpdate)
 
 
 class MaskComboItem(QComboBox):

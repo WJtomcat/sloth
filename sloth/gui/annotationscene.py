@@ -289,7 +289,8 @@ class AnnotationScene(QGraphicsScene):
                 # ignore events outside the scene rect
                 return
             # insert mode
-            self._inserter.mousePressEvent(event, self._image_item)
+            if not self._inserter.mousePressEvent(event, self._image_item):
+                QGraphicsScene.mousePressEvent(self,event)
         else:
             # selection mode
             QGraphicsScene.mousePressEvent(self, event)
@@ -334,7 +335,8 @@ class AnnotationScene(QGraphicsScene):
         #LOG.debug("mouseMoveEvent %s %s" % (self.sceneRect().contains(event.scenePos()), event.scenePos()))
         if self._inserter is not None:
             # insert mode
-            self._inserter.mouseMoveEvent(event, self._image_item)
+            if not self._inserter.mouseMoveEvent(event, self._image_item):
+                QGraphicsScene.mouseMoveEvent(self, event)
         else:
             # selection mode
             QGraphicsScene.mouseMoveEvent(self, event)
@@ -344,6 +346,9 @@ class AnnotationScene(QGraphicsScene):
             item.setSelected(False)
 
     def onSelectionChanged(self):
+        print("onSelectionChanged")
+        if self._inserter is not None:
+            return
         if len(self.selectedItems()) == 1:
             for item in self.selectedItems():
                 if isinstance(item, PolygonItem):

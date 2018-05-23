@@ -115,7 +115,7 @@ class GraphicsView(QGraphicsView):
             self._pan = True
             self._panStartX = event.x()
             self._panStartY = event.y()
-            self.setCursor(Qt.ClosedHandCursor)
+            # self.setCursor(Qt.ClosedHandCursor)
             event.accept()
         else:
             return QGraphicsView.mousePressEvent(self, event)
@@ -123,7 +123,7 @@ class GraphicsView(QGraphicsView):
     def mouseReleaseEvent(self, event):
         if self._pan:
             self._pan = False
-            self.setCursor(Qt.ArrowCursor)
+            # self.setCursor(Qt.ArrowCursor)
             event.accept()
         else:
             return QGraphicsView.mouseReleaseEvent(self, event)
@@ -136,7 +136,7 @@ class GraphicsView(QGraphicsView):
             self._panStartY = event.y()
             event.accept()
         else:
-            return QGraphicsView.mouseMoveEvent(self, event)
+            QGraphicsView.mouseMoveEvent(self, event)
 
 
 class FrameViewer(QWidget):
