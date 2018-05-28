@@ -138,6 +138,30 @@ class GraphicsView(QGraphicsView):
         else:
             QGraphicsView.mouseMoveEvent(self, event)
 
+    def viewportEvent(self, event):
+        if event.type() in [QEvent.TouchBegin, QEvent.TouchUpdate,
+                            QEvent.TouchEnd]:
+            tp = event.touchPoints()
+            # points = []
+            # if event.type() != QEvent.TouchEnd:
+            #     for p in tp:
+            #         points.append(p.pos())
+            if len(tp) == 2 and tp[0].state() == Qt.TouchPointMoved \
+                            and tp[1].state() == Qt.TouchPointMoved:
+                pOneNew = tp[0].pos()
+                pTwoNew = tp[1].pos()
+                pOneOld = tp[0].lastPos()
+                pTwoOld = tp[1].lastPos()
+
+                diffNew = pOneNew - pTwoNew
+                diffOld = pOneOld - pTwoOld
+                scaleD = math.sqrt((diffNew.x()**2+diffNew.y()**2)/(diffOld.x()**2+diffOld.y()**2))
+                self.setScaleRelative(scaleD)
+            return QGraphicsView.viewportEvent(self, event)
+        else:
+            return QGraphicsView.viewportEvent(self, event)
+
+
 
 class FrameViewer(QWidget):
     # Signals

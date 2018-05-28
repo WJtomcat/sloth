@@ -171,8 +171,8 @@ LABELS = (
         },
         'inserter': 'sloth.items.FreehandEraser',
         'hotkey':   'e',
-        'menu':     u'橡皮檫',
-        'text':     u'橡皮檫(e)',
+        'menu':     u'橡皮擦',
+        'text':     u'橡皮擦(e)',
     },
 )
 

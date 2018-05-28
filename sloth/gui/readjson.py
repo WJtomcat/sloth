@@ -1,3 +1,4 @@
+#coding:utf-8
 import json
 import os
 from PIL import Image
@@ -90,7 +91,7 @@ def readjson(dirname):
     for filename in files:
         if os.path.splitext(filename)[1] == '.json':
             os.chdir(dirname)
-            f = open(filename, 'r')
+            f = open(filename, 'rb')
             f = json.load(f)
             patientinf = f['patient_info']
             # patientinf = doencode(patientinf)

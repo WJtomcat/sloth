@@ -346,7 +346,6 @@ class AnnotationScene(QGraphicsScene):
             item.setSelected(False)
 
     def onSelectionChanged(self):
-        print("onSelectionChanged")
         if self._inserter is not None:
             return
         if len(self.selectedItems()) == 1:
