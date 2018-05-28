@@ -307,7 +307,7 @@ class PropertyEditor(QWidget):
     insertionPropertiesChanged = pyqtSignal(object)
     editPropertiesChanged      = pyqtSignal(object)
 
-    def __init__(self, config, parent=None):
+    def __init__(self, config, itemEditor, parent=None):
         QWidget.__init__(self, parent)
         # self.setMaximumWidth(290)
         self._class_config       = {}
@@ -320,6 +320,12 @@ class PropertyEditor(QWidget):
         self._combo_items = []
         self._check_items = []
         self._line_items = []
+
+        self._label_editor = None
+        self.image_item = None
+
+        self.itemEditor = itemEditor
+
         self._setupGUI()
 
         # Add label classes from config
@@ -345,7 +351,19 @@ class PropertyEditor(QWidget):
         # for label in config.CHECKBOX:
         #     self.addCheckBoxItem(label)
 
+        self._layout.addWidget(self.itemEditor)
+
+        self.finishButton = QPushButton(u'完成')
+        self.deleteButton = QPushButton(u'删除')
+        self.finishButton.setEnabled(False)
+        self.deleteButton.setEnabled(False)
         self._layout.addStretch(1)
+        self.bottomBox = QGroupBox(self)
+        self.bottomlayout = QHBoxLayout()
+        self.bottomBox.setLayout(self.bottomlayout)
+        self.bottomlayout.addWidget(self.finishButton)
+        self.bottomlayout.addWidget(self.deleteButton)
+        self._layout.addWidget(self.bottomBox)
 
     def onModelChanged(self, new_model):
         attrs = set([k for k, v in self._attribute_handlers.items() if v.autoAddEnabled()])
@@ -367,12 +385,11 @@ class PropertyEditor(QWidget):
                     h.addValue(val, True)
 
     def onImageItemChanged(self, image_item):
+        self.image_item = image_item
         for item in self._note_items:
             item.onImageItemChanged(image_item)
         for item in self._combo_items:
             item.onImageItemChanged(image_item)
-        # for item in self._check_items:
-        #     item.onImageItemChanged(image_item)
 
     def addLabelClass(self, label_config, boxnum):
         # Check label configuration
@@ -396,6 +413,7 @@ class PropertyEditor(QWidget):
         button = QPushButton(button_text, self)
         button.setCheckable(True)
         button.setFlat(True)
+        button.setMinimumHeight(45)
         button.clicked.connect(bind(self.onClassButtonPressed, label_class))
         self._class_buttons[label_class] = button
         if boxnum == 1:
@@ -445,16 +463,10 @@ class PropertyEditor(QWidget):
         noteItem = NoteItem(label_config)
         self._note_items.append(noteItem)
         box = QGroupBox(label_config, self)
-        layout = FloatingLayout()
+        layout = QHBoxLayout()
         box.setLayout(layout)
         layout.addWidget(noteItem)
         self._layout.addWidget(box)
-
-    # def addInputLine(self, label_config):
-    #     lineItem = LineEditItem(label_config)
-    #     self._line_items.append(lineItem)
-    #     self.lineLayout.addRow(label_config, lineItem)
-
 
     def addComboClass(self, label_config):
         if 'text' not in label_config:
@@ -467,21 +479,10 @@ class PropertyEditor(QWidget):
         combobox = ComboItem(label_config)
         self._combo_items.append(combobox)
         box = QGroupBox(attrs, self)
-        layout = FloatingLayout()
+        layout = QHBoxLayout()
         box.setLayout(layout)
         layout.addWidget(combobox)
         self._layout.addWidget(box)
-
-    # def addCheckBoxItem(self, label_config):
-    #     if 'text' not in label_config:
-    #         raise ImproperlyConfigured("CheckBoxItem with no text found")
-    #     attrs = label_config['text']
-    #     if 'items' not in label_config:
-    #         raise ImproperlyConfigured("CheckBoxItem with no items found")
-    #     items = label_config['items']
-    #     checkBox = CheckBoxItem(label_config, attrs)
-    #     self._check_items.append(checkBox)
-    #     self._layout.addWidget(checkBox)
 
     def parseConfiguration(self, label_class, label_config):
         attrs = label_config['attributes']
@@ -590,12 +591,6 @@ class PropertyEditor(QWidget):
         self._detailbox_layout = FloatingLayout()
         self._detailbox.setLayout(self._detailbox_layout)
 
-        # self.labelGroup = QGroupBox()
-        # self.label_layout = QHBoxLayout()
-        # self.labelGroup.setLayout(self.label_layout)
-        # self.label_layout.addWidget(self._classbox)
-        # self.label_layout.addWidget(self._detailbox)
-
         # Global widget
         self._layout = QVBoxLayout()
         self.setLayout(self._layout)
@@ -604,10 +599,6 @@ class PropertyEditor(QWidget):
 
         self._layout.addWidget(self._detailbox)
         # self._layout.addStretch(2)
-
-        # self.lineLayout = QFormLayout()
-        # self._layout.addLayout(self.lineLayout)
-
 
     def addItemEditor(self, editor):
         self._layout.addWidget(editor)

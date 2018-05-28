@@ -15,7 +15,7 @@ class AnnotationScene(QGraphicsScene):
     mousePositionChanged = pyqtSignal(float, float)
     itemChanged = pyqtSignal(PolygonItem)
     itemDisSelected = pyqtSignal()
-    def __init__(self, labeltool, items=None, inserters=None, parent=None):
+    def __init__(self, labeltool, property_editor, items=None, inserters=None, parent=None):
         super(AnnotationScene, self).__init__(parent)
 
         self._model = None
@@ -42,6 +42,21 @@ class AnnotationScene(QGraphicsScene):
         self.waitEvent = False
 
         self.selectionChanged.connect(self.onSelectionChanged)
+
+        self.property_editor = property_editor
+        self.finishButton = property_editor.finishButton
+        self.deleteButton = property_editor.deleteButton
+        self.finishButton.clicked.connect(self.onFinishButtonPressed)
+        self.deleteButton.clicked.connect(self.onDeleteButtonPressed)
+
+    def onFinishButtonPressed(self):
+        if self._inserter is not None:
+            self._inserter._removeLastPointAndFinish(self._image_item)
+        else:
+            self.finishButton.setEnabled(False)
+
+    def onDeleteButtonPressed(self):
+        self._labeltool.deleteSelectedAnnotations()
 
     #
     # getters/setters
@@ -90,6 +105,9 @@ class AnnotationScene(QGraphicsScene):
             self.setEndtime()
             self.addTime()
             self.inputflag = False
+
+        if self._inserter is not None:
+            self._inserter.abort()
 
         if current_image is None:
             self.clear()
@@ -169,6 +187,7 @@ class AnnotationScene(QGraphicsScene):
 
 
     def onInserterFinished(self):
+        self.finishButton.setEnabled(False)
         self.sender().inserterFinished.disconnect(self.onInserterFinished)
         self._labeltool.currentImageChanged.disconnect(self.sender().imageChange)
         self._labeltool.exitInsertMode()
@@ -201,6 +220,7 @@ class AnnotationScene(QGraphicsScene):
         LOG.debug("Created inserter for class '%s' with default properties '%s'" % (label_class, default_properties))
         # Change cursor to cross
         self.views()[0].viewport().setCursor(Qt.CrossCursor)
+        self.finishButton.setEnabled(True)
 
 
     def onInsertionModeEnded(self):
@@ -352,8 +372,10 @@ class AnnotationScene(QGraphicsScene):
             for item in self.selectedItems():
                 if isinstance(item, PolygonItem):
                     self.itemChanged.emit(item)
+            self.deleteButton.setEnabled(True)
         if len(self.selectedItems()) == 0:
             self.itemDisSelected.emit()
+            self.deleteButton.setEnabled(False)
         model_items = [item.modelItem() for item in self.selectedItems()]
         self._labeltool.treeview().setSelectedItems(model_items)
         self.editSelectedItems()

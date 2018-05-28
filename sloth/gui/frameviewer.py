@@ -17,6 +17,7 @@ class GraphicsView(QGraphicsView):
     focusIn = pyqtSignal()
 
     def __init__(self, parent=None):
+        self.touchflag = False
         QGraphicsView.__init__(self, parent)
         self.setDragMode(QGraphicsView.RubberBandDrag)
         #self.setDragMode(QGraphicsView.ScrollHandDrag)
@@ -141,6 +142,7 @@ class GraphicsView(QGraphicsView):
     def viewportEvent(self, event):
         if event.type() in [QEvent.TouchBegin, QEvent.TouchUpdate,
                             QEvent.TouchEnd]:
+            self.touchflag = True
             tp = event.touchPoints()
             # points = []
             # if event.type() != QEvent.TouchEnd:
@@ -157,8 +159,14 @@ class GraphicsView(QGraphicsView):
                 diffOld = pOneOld - pTwoOld
                 scaleD = math.sqrt((diffNew.x()**2+diffNew.y()**2)/(diffOld.x()**2+diffOld.y()**2))
                 self.setScaleRelative(scaleD)
+            if event.type() == QEvent.TouchEnd:
+                self.touchflag = False
+            return QGraphicsView.viewportEvent(self, event)
+        elif event.type() in [12, 13, 14, 5]:
             return QGraphicsView.viewportEvent(self, event)
         else:
+            if self.touchflag:
+                return 1
             return QGraphicsView.viewportEvent(self, event)
 
 

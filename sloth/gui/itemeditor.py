@@ -41,6 +41,7 @@ class ItemEditor(QWidget):
         self._setupGUI()
         self.setDisabled(True)
         self.item = None
+        self.hide()
 
     def getClassComboItem(self, config):
         classes = []
@@ -101,15 +102,16 @@ class ItemEditor(QWidget):
         self._layout.addStretch(1)
 
     def calpos(self):
-        selfpos = QCursor.pos()
+        selfpos = self.item.showLocation()
+        # selfpos = QCursor.pos()
         selfsize = self.size()
         mainsize = self.mainwindow.size()
-        x = selfpos.x()
-        y = selfpos.y()
-        if selfpos.x() + selfsize.width() > mainsize.width():
-            x = selfpos.x() - selfsize.width()
-        if selfpos.y() + selfsize.height() > mainsize.height():
-            y = y - selfsize.height()
+        x = selfpos.x() + self.mainwindow.pos().x() + self.mainwindow.view.pos().x()
+        y = selfpos.y() + self.mainwindow.pos().x() + self.mainwindow.view.pos().y()
+        # if selfpos.x() + selfsize.width() > mainsize.width():
+        #     x = selfpos.x() - selfsize.width()
+        # if selfpos.y() + selfsize.height() > mainsize.height():
+        #     y = y - selfsize.height()
         return x, y
 
     def onItemChanged(self, item):
@@ -118,10 +120,9 @@ class ItemEditor(QWidget):
             # self.tab.setCurrentIndex(self.tab.indexOf(self))
             self.hide()
             self.show()
-            x, y = self.calpos()
-            self.move(x, y)
+            # x, y = self.calpos()
+            # self.move(x, y)
             self.setEnabled(True)
-
         else:
             # self.tab.setCurrentIndex(0)
             self.hide()

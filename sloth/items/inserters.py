@@ -610,6 +610,10 @@ class FreehandItemInserter(PolylineItemInserter):
         ItemInserter.abort(self)
 
     def _removeLastPointAndFinish(self, image_item):
+        if self._item is None:
+            self.inserterFinished.emit()
+            self._scene.clearMessage()
+            return
         polygon = self._item.polygon()
         assert polygon.size() > 0
         self._updateAnnotation()

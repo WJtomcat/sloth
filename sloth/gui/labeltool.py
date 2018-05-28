@@ -251,8 +251,10 @@ class MainWindow(QMainWindow):
                       for label in config.LABELS + config.DETAILS
                       if 'class' in label.get('attributes', {}) and 'item' in label])
 
+        self.itemEditor = ItemEditor(config, self)
+
         # Property Editor
-        self.property_editor = PropertyEditor(config)
+        self.property_editor = PropertyEditor(config, self.itemEditor)
         # self.ui.dockProperties.setWidget(self.property_editor)
 
 
@@ -266,14 +268,15 @@ class MainWindow(QMainWindow):
         # self.ui.dockProperties.setWidget(self.tabwidget)
 
         self.ui.dockProperties.setWidget(self.property_editor)
-        self.itemEditor = ItemEditor(config, self)
         # self.property_editor.addItemEditor(self.itemEditor)
 
         self.imageinfo = ImageInfo(config)
         self.ui.dockImageInfo.setWidget(self.imageinfo)
 
         # Scene
-        self.scene = AnnotationScene(self.labeltool, items=items, inserters=inserters)
+        self.scene = AnnotationScene(self.labeltool, self.property_editor,
+                                     items=items,
+                                     inserters=inserters)
         self.property_editor.insertionModeStarted.connect(self.scene.onInsertionModeStarted)
         self.property_editor.insertionModeEnded.connect(self.scene.onInsertionModeEnded)
 
