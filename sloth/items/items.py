@@ -848,6 +848,10 @@ class PolygonItem(BaseItem):
     def updateModel(self):
         xn = [str(p.x()) for p in self._polygon]
         yn = [str(p.y()) for p in self._polygon]
+        if len(xn) == 0 or len(yn) == 0:
+            print('delete the item.')
+            self._model_item.delete()
+            return
         strx = ';'.join(xn)
         stry = ';'.join(yn)
         self._model_item.update({
