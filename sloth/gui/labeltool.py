@@ -24,7 +24,16 @@ from sloth.gui.readjson import readjson
 
 GUIDIR=os.path.join(os.path.dirname(__file__))
 
-LOG=logging.getLogger(__name__)
+LOG = logging.getLogger(__name__)
+LOG.setLevel(logging.DEBUG)
+
+handler = logging.FileHandler('logging.log')
+handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+LOG.addHandler(handler)
+
+LOG.debug("loading labeltool.py(gui)")
 
 class BackgroundLoader(QObject):
     finished = pyqtSignal()
