@@ -799,11 +799,16 @@ class PolygonItem(BaseItem):
                 polygon.append(QPointF(x, y))
             return polygon
 
-        except KeyError as e:
-            LOG.debug("PolygonItem: Could not find expected key in item: "
-                      + str(e) + ". Check your config!")
-            self.setValid(False)
-            return QPolygonF()
+        except (KeyError, ValueError) as e:
+            if isinstance(e, KeyError):
+                LOG.debug("PolygonItem: Could not find expected key in item: "
+                          + str(e) + ". Check your config!")
+                self.setValid(False)
+                return QPolygonF()
+            else:
+                print('polygonitem has no points')
+                LOG.debug("PolygonItem has no points.")
+                return QPolygonF()
 
     def dataTo(self, name):
         if self._model_item is None:
