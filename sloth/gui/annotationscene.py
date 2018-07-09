@@ -101,7 +101,7 @@ class AnnotationScene(QGraphicsScene):
             self._image_item = current_image
             self._opaque = 0.6
             current_image._seen = True
-            assert self._image_item.model() == self._model
+            # assert self._image_item.model() == self._model
             if isinstance(self._image_item, DicomImageModelItem):
                 self._image =self._labeltool.getDcmImage(self._image_item)
             elif isinstance(self._image_item, ImageFileModelItem):
