@@ -9,14 +9,6 @@ from PyQt5.QtWidgets import *
 
 
 LOG = logging.getLogger(__name__)
-LOG.setLevel(logging.DEBUG)
-
-handler = logging.FileHandler('logging.log')
-handler.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-LOG.addHandler(handler)
-
 
 # convenience functions for creating hotkey functions
 class cycleValue:

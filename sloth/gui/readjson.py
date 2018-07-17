@@ -2,7 +2,6 @@ import json
 import os
 from PIL import Image
 import numpy as np
-import pydicom
 
 def doencode(a):
     out = dict()
@@ -24,18 +23,19 @@ def decodeImage(fname):
         im = autoCutImage(im, 50)
         return 'jpg', Image.fromarray(im)
     except IOError:
-        img = pydicom.read_file(fname)
-        img = img.PixelData
-        img = img[20:]
-        tmp = open('tmp.jpg', 'wb')
-        tmp.write(img)
-        tmp.close()
-        img = Image.open('tmp.jpg')
-        img = np.asarray(img)
-        # if img.shape[0] == 1020 and img.shape[1] == 1276:
-        #     img = img[:911, 87:1166, :].copy()
-        #     return Image.fromarray(img)
-        return 'dicom', Image.fromarray(img)
+        try:
+            import pydicom
+            img = pydicom.read_file(fname)
+            img = img.PixelData
+            img = img[20:]
+            tmp = open('tmp.jpg', 'wb')
+            tmp.write(img)
+            tmp.close()
+            img = Image.open('tmp.jpg')
+            img = np.asarray(img)
+            return 'dicom', Image.fromarray(img)
+        except ImportError:
+            return None
 
 
 def autoCutImage(img, thresh):
