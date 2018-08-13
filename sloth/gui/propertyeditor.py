@@ -309,7 +309,7 @@ class PropertyEditor(QWidget):
 
     def __init__(self, config, parent=None):
         QWidget.__init__(self, parent)
-        self.setMaximumWidth(290)
+        self.setMaximumWidth(310)
         self._class_config       = {}
         self._class_items        = {}
         self._class_prototypes   = {}
@@ -393,9 +393,19 @@ class PropertyEditor(QWidget):
 
         # Add label class button
         button_text = label_config['text']
-        button = QPushButton(button_text, self)
+
+
+        _pixmap = QPixmap(8, 8)
+        _color = QColor(128, 0, 128)
+        _pixmap.fill(_color)
+        icon = QIcon(_pixmap)
+
+
+
+        button = QPushButton(icon, button_text, self)
         button.setCheckable(True)
         button.setFlat(True)
+        button.setStyleSheet("QPushButton{text-align : left;}")
         button.clicked.connect(bind(self.onClassButtonPressed, label_class))
         self._class_buttons[label_class] = button
         if boxnum == 1:
@@ -428,7 +438,13 @@ class PropertyEditor(QWidget):
 
         # Add label class button
         button_text = label_config['text']
-        button = QPushButton(button_text, self)
+
+        _pixmap = QPixmap(10, 10)
+        _color = QColor(128, 0, 128)
+        _pixmap.fill(_color)
+        icon = QIcon(_pixmap)
+
+        button = QPushButton(icon, button_text, self)
         button.setCheckable(True)
         button.setFlat(True)
         button.clicked.connect(bind(self.onClassButtonPressed, label_class))
