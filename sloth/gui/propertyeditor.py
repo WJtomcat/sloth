@@ -311,7 +311,7 @@ class PropertyEditor(QWidget):
 
     def __init__(self, config, parent=None):
         QWidget.__init__(self, parent)
-        self.setMaximumWidth(310)
+        self.setMaximumWidth(250)
         self._class_config       = {}
         self._class_items        = {}
         self._class_prototypes   = {}
@@ -332,8 +332,12 @@ class PropertyEditor(QWidget):
             else:
                 self.addLabelClass(label, 2)
 
-        for label in config.DETAILS:
-            self.addDetailClass(label)
+        for i, label in enumerate(config.DETAILS):
+            if i < 3:
+                self.addDetailClass(label, 1)
+            else:
+                self.addDetailClass(label, 2)
+        self.detailbox2layout.addStretch(1)
 
         for label in config.COMBOCLASS:
             self.addComboClass(label)
@@ -423,7 +427,7 @@ class PropertyEditor(QWidget):
             hotkey.activated.connect(button.click)
             self._class_shortcuts[label_class] = hotkey
 
-    def addDetailClass(self, label_config):
+    def addDetailClass(self, label_config, boxnum):
         # Check label configuration
         if 'attributes' not in label_config:
             raise ImproperlyConfigured("Label with no 'attributes' dict found")
@@ -456,9 +460,13 @@ class PropertyEditor(QWidget):
         button = QPushButton(icon, button_text, self)
         button.setCheckable(True)
         button.setFlat(True)
+        button.setStyleSheet("QPushButton{text-align : left;}")
         button.clicked.connect(bind(self.onClassButtonPressed, label_class))
         self._class_buttons[label_class] = button
-        self._detailbox_layout.addWidget(button)
+        if boxnum == 1:
+            self.detailbox1layout.addWidget(button)
+        else:
+            self.detailbox2layout.addWidget(button)
 
         # Add hotkey
         if 'hotkey' in label_config:
@@ -597,12 +605,19 @@ class PropertyEditor(QWidget):
         # Label class buttons
         self._classbox = QGroupBox(u"形态分类", self)
         self._classbox_layout = QHBoxLayout()
+        self._classbox_layout.setContentsMargins(0,0,0,0)
+        self._classbox_layout.setSpacing(0)
 
         self.box1 = QGroupBox(self)
         self.box1layout = QVBoxLayout()
+        self.box1layout.setContentsMargins(0,0,0,0)
+        self.box1layout.setSpacing(0)
+
         self.box1.setLayout(self.box1layout)
         self.box2 = QGroupBox(self)
         self.box2layout = QVBoxLayout()
+        self.box2layout.setContentsMargins(0,0,0,0)
+        self.box2layout.setSpacing(2)
         self.box2.setLayout(self.box2layout)
 
         self._classbox_layout.addWidget(self.box1)
@@ -612,7 +627,29 @@ class PropertyEditor(QWidget):
         self._classbox.setLayout(self._classbox_layout)
 
         self._detailbox = QGroupBox(u"形态细节(可选)", self)
-        self._detailbox_layout = FloatingLayout()
+        self._detailbox_layout = QHBoxLayout()
+        self._detailbox_layout.setContentsMargins(0,0,0,0)
+        self._detailbox_layout.setSpacing(0)
+
+        self.detailbox1 = QGroupBox(self)
+        self.detailbox1layout = QVBoxLayout()
+        self.detailbox1layout.setContentsMargins(0,0,0,0)
+        self.detailbox1layout.setSpacing(0)
+
+        self.detailbox1.setLayout(self.detailbox1layout)
+        self.detailbox2 = QGroupBox(self)
+        self.detailbox2layout = QVBoxLayout()
+        self.detailbox2layout.setContentsMargins(0,0,0,0)
+        self.detailbox2layout.setSpacing(2)
+        self.detailbox2.setLayout(self.detailbox2layout)
+
+        self._detailbox_layout.addWidget(self.detailbox1)
+        self._detailbox_layout.addWidget(self.detailbox2)
+
+
+        self._detailbox.setLayout(self._detailbox_layout)
+
+
         self._detailbox.setLayout(self._detailbox_layout)
 
         # self.labelGroup = QGroupBox()
@@ -623,6 +660,7 @@ class PropertyEditor(QWidget):
 
         # Global widget
         self._layout = QVBoxLayout()
+        self._layout.setContentsMargins(0,0,0,0)
         self.setLayout(self._layout)
         # self._layout.addStretch(1)
         self._layout.addWidget(self._classbox)

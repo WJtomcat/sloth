@@ -6,6 +6,8 @@ from PyQt5.QtWidgets import *
 class FloatingLayout(QLayout):
     def __init__(self, parent=None):
         QLayout.__init__(self, parent)
+        self.setContentsMargins(0,0,0,0)
+        self.setSpacing(2)
         self._items = []
         self._updateMinimumSize()
 

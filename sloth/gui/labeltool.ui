@@ -115,7 +115,7 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>300</width>
+     <width>250</width>
      <height>44</height>
     </size>
    </property>
@@ -130,7 +130,7 @@
   <widget class="QDockWidget" name="dockAnnotations">
    <property name="minimumSize">
     <size>
-     <width>300</width>
+     <width>250</width>
      <height>38</height>
     </size>
    </property>
@@ -145,7 +145,7 @@
   <widget class="QDockWidget" name="dockImageInfo">
    <property name="minimumSize">
     <size>
-     <width>300</width>
+     <width>250</width>
      <height>38</height>
     </size>
    </property>
