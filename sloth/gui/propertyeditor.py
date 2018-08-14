@@ -13,6 +13,8 @@ from sloth.gui.noteitem import *
 from sloth.gui.comboitem import ComboItem, MaskComboItem
 from sloth.gui.checkboxitem import CheckBoxItem
 
+from sloth.conf import config
+
 
 LOG = logging.getLogger(__name__)
 
@@ -394,12 +396,14 @@ class PropertyEditor(QWidget):
         # Add label class button
         button_text = label_config['text']
 
+        _color = label_config['attributes']['class']
+        _color = config.COLORMAP[_color]
+
 
         _pixmap = QPixmap(8, 8)
-        _color = QColor(128, 0, 128)
+        _color = QColor(_color[0], _color[1], _color[2])
         _pixmap.fill(_color)
         icon = QIcon(_pixmap)
-
 
 
         button = QPushButton(icon, button_text, self)
@@ -439,10 +443,15 @@ class PropertyEditor(QWidget):
         # Add label class button
         button_text = label_config['text']
 
-        _pixmap = QPixmap(10, 10)
-        _color = QColor(128, 0, 128)
+        _color = label_config['attributes']['class']
+        _color = config.COLORMAP[_color]
+
+
+        _pixmap = QPixmap(8, 8)
+        _color = QColor(_color[0], _color[1], _color[2])
         _pixmap.fill(_color)
         icon = QIcon(_pixmap)
+
 
         button = QPushButton(icon, button_text, self)
         button.setCheckable(True)
